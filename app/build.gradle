@@ -15,7 +15,21 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        // Adding a build config variable here based on code from
+        // https://gist.github.com/curioustechizen/9f7d745f9f5f51355bd6
+        applicationVariants.all { variant ->
+            variant.buildConfigField "String", "API_KEY", "\""+getApiKey()+"\""
+        }
+
     }
+}
+
+// Adding a method to read the API key from secrets.properties file based on code from
+// https://gist.github.com/curioustechizen/9f7d745f9f5f51355bd6
+def getApiKey(){
+    def Properties props = new Properties()
+    props.load(new FileInputStream(new File('secrets.properties')))
+    return props['API_KEY']
 }
 
 dependencies {

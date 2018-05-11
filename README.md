@@ -1,5 +1,8 @@
 # UAND-2-Popular-Movies
-Udacity Android Nanodegree Project 2 Popular Movies
+*For the Udacity reviewer*: In order for the application to compile, please create a secrets.properties file in the app folder. The file needs to contain the following line
+     API_KEY=<please insert the actual key here>
+The build.gradle reads the API_KEY property from that file.
+Link for reference on how to load API Keys and other secrets from properties file using gradle - https://gist.github.com/curioustechizen/9f7d745f9f5f51355bd6
 
 # Project Overview
 Most of us can relate to kicking back on the couch and enjoying a movie with friends and family. In this project, you’ll build an app to allow users to discover the most popular movies playing. We will split the development of this app in two stages. First, let's talk about stage 1.

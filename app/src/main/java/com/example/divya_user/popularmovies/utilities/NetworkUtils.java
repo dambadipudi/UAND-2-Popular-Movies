@@ -1,5 +1,8 @@
 package com.example.divya_user.popularmovies.utilities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
@@ -76,7 +79,6 @@ public class NetworkUtils {
 
         try {
             URL movieDBURL = new URL(movieDBUri.toString());
-            Log.v(TAG, "URL: " + movieDBURL);
             return movieDBURL;
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -103,12 +105,30 @@ public class NetworkUtils {
             String response = null;
             if (hasInput) {
                 response = scanner.next();
-                Log.v(TAG, "Response: "+response);
             }
             scanner.close();
             return response;
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    /**
+     * This method checks whether there the device is connected to the network
+     *
+     * @param context The context which calls this method
+     * @return Whether the device is connected
+     */
+    public static boolean isOnline(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                                            context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager != null) {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if(networkInfo != null) {
+                return networkInfo.isConnected();
+            }
+        }
+
+        return false;
     }
 }

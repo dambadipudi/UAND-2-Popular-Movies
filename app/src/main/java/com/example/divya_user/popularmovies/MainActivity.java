@@ -8,6 +8,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.divya_user.popularmovies.model.Movie;
 import com.example.divya_user.popularmovies.utilities.JSONUtils;
@@ -39,18 +40,21 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
+
     }
 
      /**
       * Loader class to make the network call to the movie DB API
       */
-    static class MovieAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
+     private static class MovieAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
 
 
         List<Movie> cachedMoviesList;
+        Context mContext;
 
         public MovieAsyncTaskLoader(@NonNull Context context) {
             super(context);
+            mContext = context;
         }
 
         @Override
@@ -73,13 +77,19 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public List<Movie> loadInBackground() {
             URL movieURL = NetworkUtils.getTopRatedMoviesURL(pageNumber);
-            String movieJSON = null;
+            String movieJSON;
             try {
-                movieJSON = NetworkUtils.getResponseFromHttpUrl(movieURL);
+                if(NetworkUtils.isOnline(mContext)) {
+                    movieJSON = NetworkUtils.getResponseFromHttpUrl(movieURL);
+                    if(movieJSON != null) {
+                        return JSONUtils.getListOfMoviesFromJSON(movieJSON);
+                    }
+                }
+                return null;
             } catch (IOException e) {
                 e.printStackTrace();
+                return null;
             }
-            return JSONUtils.getListOfMoviesFromJSON(movieJSON);
         }
 
          @Override
@@ -118,8 +128,12 @@ public class MainActivity extends AppCompatActivity implements
     */
      @Override
     public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
-        for(Movie curMovie : data) {
-            System.out.println(curMovie.toString());
+        if(null == data) {
+            Toast.makeText(this, "Oops", Toast.LENGTH_LONG).show();
+        } else {
+            for(Movie curMovie : data) {
+                System.out.println(curMovie.toString());
+            }
         }
     }
 

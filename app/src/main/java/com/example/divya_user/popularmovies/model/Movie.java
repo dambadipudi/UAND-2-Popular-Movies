@@ -1,15 +1,14 @@
 package com.example.divya_user.popularmovies.model;
 
 /**
- * Created by Divya on 5/9/2018.
  *
  * This class contains the Movie object that we obtain from the Movie DB API
- *
- * Added a constructor to create the Movie object with all values on 5/12/2018
  *
  */
 
 public class Movie {
+
+    private String title;
 
     private String originalTitle;
 
@@ -25,13 +24,15 @@ public class Movie {
 
     private String releaseDate;
 
-    public Movie(String originalTitle,
+    public Movie(String title,
+                 String originalTitle,
                  String posterPath,
                  String backdropPath,
                  String plotSynopsis,
                  double userRating,
                  int userRatingCount,
                  String releasedDate) {
+        this.title = title;
         this.originalTitle = originalTitle;
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
@@ -39,6 +40,14 @@ public class Movie {
         this.userRating = userRating;
         this.userRatingCount = userRatingCount;
         this.releaseDate = releasedDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setOriginalTitle(String originalTitle) {

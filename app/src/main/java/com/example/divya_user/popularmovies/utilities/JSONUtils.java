@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Divya on 5/12/2018.
- *
  * Adds methods to extract Movie objects from the JSON data returned by the API calls
  */
 
@@ -20,6 +18,8 @@ public class JSONUtils {
     private final static String TOTAL_PAGES = "total_pages";
 
     private final static String RESULTS = "results";
+
+    private final static String TITLE = "title";
 
     private final static String ORIGINAL_TITLE = "original_title";
 
@@ -58,7 +58,8 @@ public class JSONUtils {
             for(int index = 0; index < resultsJSONArray.length(); index++) {
 
                 JSONObject currentMovieJSONObject = resultsJSONArray.getJSONObject(index);
-                Movie currentMovie = new Movie(currentMovieJSONObject.getString(ORIGINAL_TITLE),
+                Movie currentMovie = new Movie(currentMovieJSONObject.getString(TITLE),
+                                                currentMovieJSONObject.getString(ORIGINAL_TITLE),
                                                 currentMovieJSONObject.getString(POSTER_PATH),
                                                 currentMovieJSONObject.getString(BACKDROP_PATH),
                                                 currentMovieJSONObject.getString(PLOT_SYNOPSIS),

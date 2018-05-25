@@ -8,6 +8,9 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.widget.Toast;
 
 import com.example.divya_user.popularmovies.model.Movie;
@@ -30,6 +33,11 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int ID_MOVIE_LOADER = 44;
 
+    private int gridSpanCount = 3;
+
+    private RecyclerView mRecyclerView;
+    private MovieAdapter mMovieAdapter;
+
     // The page number from which data is returned by movieDB API
     private static int pageNumber = 1;
 
@@ -38,6 +46,17 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRecyclerView = findViewById(R.id.rv_movies);
+
+        GridLayoutManager layoutManager
+                = new GridLayoutManager(this, gridSpanCount);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mMovieAdapter = new MovieAdapter(this);
+        mRecyclerView.setAdapter(mMovieAdapter);
 
         getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
 
@@ -82,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements
                 if(NetworkUtils.isOnline(mContext)) {
                     movieJSON = NetworkUtils.getResponseFromHttpUrl(movieURL);
                     if(movieJSON != null) {
-                        return JSONUtils.getListOfMoviesFromJSON(movieJSON);
+                        List<Movie> moviesList = JSONUtils.getListOfMoviesFromJSON(movieJSON);
+                        return moviesList;
                     }
                 }
                 return null;
@@ -131,9 +151,7 @@ public class MainActivity extends AppCompatActivity implements
         if(null == data) {
             Toast.makeText(this, "Oops", Toast.LENGTH_LONG).show();
         } else {
-            for(Movie curMovie : data) {
-                System.out.println(curMovie.toString());
-            }
+            mMovieAdapter.setMovieData(data);
         }
     }
 

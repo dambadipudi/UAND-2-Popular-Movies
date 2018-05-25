@@ -16,8 +16,6 @@ import java.net.URL;
 import java.util.Scanner;
 
 /**
- * Created by Divya on 5/10/2018.
- *
  * This class contains the methods to create the URL and make the network calls to the movie DB API
  *
  */
@@ -28,6 +26,11 @@ public class NetworkUtils {
 
     //For both top rated and popular movies, we are using the movie endpoint, so that is the base URL
     private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
+
+    //The Base URL to access the poster image
+    private static final String POSTER_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
+
+    private static final String POSTER_SIZE = "w185/";
 
     //the movie/top_rated endpoint in order to sort the movies by top rated
     private static final String TOP_RATED_PATH = "top_rated";
@@ -40,6 +43,8 @@ public class NetworkUtils {
 
     //The page number to be specified for subsequent requests
     private static final String PAGE_PARAM = "page";
+
+
 
 
     /**
@@ -130,5 +135,14 @@ public class NetworkUtils {
         }
 
         return false;
+    }
+
+    /**
+     * This method returns the base url that needs to prepended to the poster path
+     *
+     * @return the path as a string
+     */
+    public static String getBasePosterImageURL() {
+        return POSTER_IMAGE_BASE_URL + POSTER_SIZE;
     }
 }

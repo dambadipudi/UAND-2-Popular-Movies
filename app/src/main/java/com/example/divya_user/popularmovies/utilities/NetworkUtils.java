@@ -44,9 +44,6 @@ public class NetworkUtils {
     //The page number to be specified for subsequent requests
     private static final String PAGE_PARAM = "page";
 
-
-
-
     /**
      * Retrieves the URL to query for the Top Rated Movies List
      *

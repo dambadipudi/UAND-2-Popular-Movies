@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements
         @Nullable
         @Override
         public List<Movie> loadInBackground() {
-            URL movieURL = NetworkUtils.getTopRatedMoviesURL(pageNumber);
+            URL movieURL = NetworkUtils.getPopularMoviesURL(pageNumber);
             String movieJSON;
             try {
                 if(NetworkUtils.isOnline(mContext)) {

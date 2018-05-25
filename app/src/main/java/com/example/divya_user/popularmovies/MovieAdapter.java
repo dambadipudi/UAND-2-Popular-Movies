@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.divya_user.popularmovies.model.Movie;
+import com.example.divya_user.popularmovies.utilities.DateUtils;
 import com.example.divya_user.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
@@ -63,7 +64,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                 .into(movieAdapterViewHolder.mPosterImageView);
 
         movieAdapterViewHolder.mTitle.setText(currentMovie.getTitle());
-        movieAdapterViewHolder.mReleaseYear.setText(currentMovie.getReleaseDate());
+        movieAdapterViewHolder.mReleaseYear.setText(DateUtils.getYearFromDateString(currentMovie.getReleaseDate()));
 
     }
 

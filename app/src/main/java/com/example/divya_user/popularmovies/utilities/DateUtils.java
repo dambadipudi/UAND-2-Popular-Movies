@@ -12,7 +12,7 @@ import java.util.Date;
 
 public class DateUtils {
 
-    private static final String MOVIE_DATE_FORMAT = "YYYY-MM-DD";
+    private static final String MOVIE_DATE_FORMAT = "yyyy-MM-dd";
 
     /**
      *
@@ -26,7 +26,7 @@ public class DateUtils {
         try {
             Date dateObj = dateFormat.parse(date);
 
-            SimpleDateFormat yearFormat = new SimpleDateFormat("YYYY");
+            SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
             String yearString = yearFormat.format(dateObj);
             return yearString;
         } catch (ParseException e) {

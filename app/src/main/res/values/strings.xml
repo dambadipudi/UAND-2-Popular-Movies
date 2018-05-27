@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+
+    <string name="spinner_label">Sort By: </string>
+
+    <string-array name="spinner_labels">
+        <item>Most Popular</item>
+        <item>Top Rated</item>
+    </string-array>
+
+    <string-array name="spinner_keys"
+                    translatable="false">
+        <item>popular</item>
+        <item>top_rated</item>
+    </string-array>
+
 </resources>

@@ -45,26 +45,6 @@ public class NetworkUtils {
     private static final String PAGE_PARAM = "page";
 
     /**
-     * Retrieves the URL to query for the Top Rated Movies List
-     *
-     * @param pageNumber in the API so can download the list of movies from that page
-     * @return URL to query the movie/top_rated endpoint
-     */
-    public static URL getTopRatedMoviesURL(int pageNumber) {
-        return buildMovieDBURL(TOP_RATED_PATH, pageNumber);
-    }
-
-    /**
-     * Retrieves the URL to query for the Popular Movies List
-     *
-     * @param pageNumber in the API so can download the list of movies from that page
-     * @return URL to query the movie/popular endpoint
-     */
-    public static URL getPopularMoviesURL(int pageNumber) {
-        return buildMovieDBURL(POPULAR_PATH, pageNumber);
-    }
-
-    /**
      * Builds the URL used to talk to the movie DB API. It builds the URL based on the
      * sort type and the page number to be downloaded
      *
@@ -72,20 +52,19 @@ public class NetworkUtils {
      * @param pageNumber The movies to be downloaded based on the page number
      * @return The URL to use to query the movie DB API
      */
-    private static URL buildMovieDBURL(String sortType, int pageNumber) {
+    public static URL getMovieDBURL(String sortType, int pageNumber) throws MalformedURLException {
+
+        if(!(sortType.equals(POPULAR_PATH) || sortType.equals(TOP_RATED_PATH))) {
+            return null;
+        }
 
         Uri movieDBUri = Uri.parse(BASE_URL + sortType).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.API_KEY)
                 .appendQueryParameter(PAGE_PARAM, Integer.toString(pageNumber))
                 .build();
 
-        try {
-            URL movieDBURL = new URL(movieDBUri.toString());
-            return movieDBURL;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        }
+        URL movieDBURL = new URL(movieDBUri.toString());
+        return movieDBURL;
     }
 
     /**

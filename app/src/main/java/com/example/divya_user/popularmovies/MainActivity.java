@@ -1,6 +1,7 @@
 package com.example.divya_user.popularmovies;
 
 import android.content.Context;
+import android.net.Network;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -11,6 +12,11 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.divya_user.popularmovies.model.Movie;
@@ -18,6 +24,7 @@ import com.example.divya_user.popularmovies.utilities.JSONUtils;
 import com.example.divya_user.popularmovies.utilities.NetworkUtils;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -28,15 +35,22 @@ import java.util.List;
  *
  */
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<List<Movie>>
+        LoaderManager.LoaderCallbacks<List<Movie>>,
+        AdapterView.OnItemSelectedListener
          {
 
     private static final int ID_MOVIE_LOADER = 44;
 
+    private static final String SORT_BY_KEY = "sort_by";
+
     private int gridSpanCount = 3;
+
+    private boolean spinnerTouched = false;
 
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
+
+    private Spinner mSortBySpinner;
 
     // The page number from which data is returned by movieDB API
     private static int pageNumber = 1;
@@ -46,6 +60,20 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mSortBySpinner = findViewById(R.id.spinner_sort_by);
+        mSortBySpinner.setOnItemSelectedListener(this);
+        mSortBySpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    spinnerTouched = true; // User DID touched the spinner!
+                }
+
+                return false;
+            }
+        });
 
         mRecyclerView = findViewById(R.id.rv_movies);
 
@@ -58,9 +86,36 @@ public class MainActivity extends AppCompatActivity implements
         mMovieAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
+        Bundle sortByParamBundle = new Bundle();
+        sortByParamBundle.putString(SORT_BY_KEY, "popular");
+
+        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, sortByParamBundle, this);
 
     }
+
+     @Override
+     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        System.out.println("Spinner touched = " + spinnerTouched);
+        if(spinnerTouched) {
+            //When the selection changes, call the respective methods to make the API call
+            String sortByKey = getResources().getStringArray(R.array.spinner_keys)[position];
+
+            Bundle sortByParamBundle = new Bundle();
+            sortByParamBundle.putString(SORT_BY_KEY, sortByKey);
+
+            invalidateData();
+            getSupportLoaderManager().restartLoader(ID_MOVIE_LOADER, sortByParamBundle, this);
+        }
+     }
+
+     @Override
+     public void onNothingSelected(AdapterView<?> parent) {
+
+     }
+
+     private void invalidateData() {
+        mMovieAdapter.setMovieData(null);
+     }
 
      /**
       * Loader class to make the network call to the movie DB API
@@ -69,11 +124,13 @@ public class MainActivity extends AppCompatActivity implements
 
 
         List<Movie> cachedMoviesList;
+        String mSortByKey;
         Context mContext;
 
-        public MovieAsyncTaskLoader(@NonNull Context context) {
+        public MovieAsyncTaskLoader(String sortByKey, @NonNull Context context) {
             super(context);
             mContext = context;
+            mSortByKey = sortByKey;
         }
 
         @Override
@@ -95,16 +152,21 @@ public class MainActivity extends AppCompatActivity implements
         @Nullable
         @Override
         public List<Movie> loadInBackground() {
-            URL movieURL = NetworkUtils.getPopularMoviesURL(pageNumber);
-            String movieJSON;
             try {
-                if(NetworkUtils.isOnline(mContext)) {
+                URL movieURL = NetworkUtils.getMovieDBURL(mSortByKey, pageNumber);
+
+                String movieJSON;
+
+                if(NetworkUtils.isOnline(mContext) && movieURL != null) {
                     movieJSON = NetworkUtils.getResponseFromHttpUrl(movieURL);
                     if(movieJSON != null) {
                         List<Movie> moviesList = JSONUtils.getListOfMoviesFromJSON(movieJSON);
                         return moviesList;
                     }
                 }
+                return null;
+            } catch(MalformedURLException e) {
+                e.printStackTrace();
                 return null;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -134,7 +196,9 @@ public class MainActivity extends AppCompatActivity implements
         switch (loaderId) {
 
             case ID_MOVIE_LOADER:
-                return new MainActivity.MovieAsyncTaskLoader(this);
+                if(bundle != null) {
+                    return new MainActivity.MovieAsyncTaskLoader(bundle.getString(SORT_BY_KEY), this);
+                }
             default:
                 throw new RuntimeException("Loader Not Implemented: " + loaderId);
         }

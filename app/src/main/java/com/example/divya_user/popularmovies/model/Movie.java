@@ -1,12 +1,15 @@
 package com.example.divya_user.popularmovies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  *
  * This class contains the Movie object that we obtain from the Movie DB API
  *
  */
 
-public class Movie {
+public class Movie implements Parcelable{
 
     private String title;
 
@@ -41,6 +44,29 @@ public class Movie {
         this.userRatingCount = userRatingCount;
         this.releaseDate = releasedDate;
     }
+
+    protected Movie(Parcel in) {
+        title = in.readString();
+        originalTitle = in.readString();
+        posterPath = in.readString();
+        backdropPath = in.readString();
+        plotSynopsis = in.readString();
+        userRating = in.readDouble();
+        userRatingCount = in.readInt();
+        releaseDate = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -111,5 +137,22 @@ public class Movie {
         return "originalTitle: " + originalTitle + " posterPath: " + posterPath + " backdropPath " +
                 backdropPath + "plotSynopsis: " + plotSynopsis + "userRating: " + userRating +
                 "userRatingCount: " + userRatingCount + " releaseDate: " + releaseDate;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(originalTitle);
+        dest.writeString(posterPath);
+        dest.writeString(backdropPath);
+        dest.writeString(plotSynopsis);
+        dest.writeDouble(userRating);
+        dest.writeInt(userRatingCount);
+        dest.writeString(releaseDate);
     }
 }

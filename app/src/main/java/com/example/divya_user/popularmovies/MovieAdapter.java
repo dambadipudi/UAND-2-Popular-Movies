@@ -44,7 +44,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     public interface MoviePosterClickListener {
-        void onPosterClicked(int clickedPosterIndex);
+        void onPosterClicked(Movie clickedMovieObject);
     }
 
     /**
@@ -116,7 +116,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         @Override
         public void onClick(View v) {
             int clickedPosterPosition = getAdapterPosition();
-            mOnClickListener.onPosterClicked(clickedPosterPosition);
+            mOnClickListener.onPosterClicked(mMovieList.get(clickedPosterPosition));
         }
     }
 

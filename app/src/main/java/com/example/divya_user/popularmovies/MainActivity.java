@@ -1,6 +1,7 @@
 package com.example.divya_user.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Network;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,7 +37,8 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<Movie>>,
-        AdapterView.OnItemSelectedListener
+        AdapterView.OnItemSelectedListener,
+        MovieAdapter.MoviePosterClickListener
          {
 
     private static final int ID_MOVIE_LOADER = 44;
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mRecyclerView.setHasFixedSize(true);
 
-        mMovieAdapter = new MovieAdapter(this);
+        mMovieAdapter = new MovieAdapter(this, this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
         Bundle sortByParamBundle = new Bundle();
@@ -93,9 +95,12 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+     /*
+      * This method handles spinner item selection. Only if the spinner is touched, the loader is restarted
+      * as this method also gets called during orientation changes
+      */
      @Override
      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        System.out.println("Spinner touched = " + spinnerTouched);
         if(spinnerTouched) {
             //When the selection changes, call the respective methods to make the API call
             String sortByKey = getResources().getStringArray(R.array.spinner_keys)[position];
@@ -117,7 +122,13 @@ public class MainActivity extends AppCompatActivity implements
         mMovieAdapter.setMovieData(null);
      }
 
-     /**
+     @Override
+     public void onPosterClicked(int clickedPosterIndex) {
+         Intent intent = new Intent(this, DetailActivity.class);
+         startActivity(intent);
+     }
+
+             /**
       * Loader class to make the network call to the movie DB API
       */
      private static class MovieAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {

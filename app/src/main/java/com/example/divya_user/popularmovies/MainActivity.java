@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String SORT_BY_KEY = "sort_by";
 
+    private static final String CLICKED_MOVIE_OBJECT = "clicked_movie_object";
+
     private int gridSpanCount = 3;
 
     private boolean spinnerTouched = false;
@@ -123,8 +125,9 @@ public class MainActivity extends AppCompatActivity implements
      }
 
      @Override
-     public void onPosterClicked(int clickedPosterIndex) {
+     public void onPosterClicked(Movie clickedMovieObject) {
          Intent intent = new Intent(this, DetailActivity.class);
+         intent.putExtra(CLICKED_MOVIE_OBJECT, clickedMovieObject);
          startActivity(intent);
      }
 

@@ -3,6 +3,7 @@ package com.example.divya_user.popularmovies;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     private Context mContext;
 
-    public MovieAdapter(Context context) {
+    final private MoviePosterClickListener mOnClickListener;
+
+    /**
+     * Constructor for MovieAdapter that accepts the context of the calling class
+     * and a class that implements the MoviePosterClickListener interface
+     *
+     * @param context
+     * @param listener
+     */
+    public MovieAdapter(Context context, MoviePosterClickListener listener) {
         mContext = context;
+        mOnClickListener = listener;
+    }
+
+    public interface MoviePosterClickListener {
+        void onPosterClicked(int clickedPosterIndex);
     }
 
     /**
@@ -65,7 +80,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         movieAdapterViewHolder.mTitle.setText(currentMovie.getTitle());
         movieAdapterViewHolder.mReleaseYear.setText(DateUtils.getYearFromDateString(currentMovie.getReleaseDate()));
-
     }
 
     /**
@@ -80,7 +94,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     /**
      * This inner class is used to create the ViewHolder object mspped to the layout elements
      */
-    public class MovieAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class MovieAdapterViewHolder extends RecyclerView.ViewHolder
+                            implements View.OnClickListener {
         public final ImageView mPosterImageView;
         public final TextView mTitle;
         public final TextView mReleaseYear;
@@ -95,6 +110,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             mPosterImageView = (ImageView) view.findViewById(R.id.iv_movie_poster);
             mTitle = (TextView) view.findViewById(R.id.tv_title);
             mReleaseYear = (TextView) view.findViewById(R.id.tv_release_year);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int clickedPosterPosition = getAdapterPosition();
+            mOnClickListener.onPosterClicked(clickedPosterPosition);
         }
     }
 

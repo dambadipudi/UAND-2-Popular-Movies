@@ -147,7 +147,7 @@
             android:layout_margin="@dimen/divider_margin"
             android:background="@android:color/darker_gray"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+            app:layout_constraintTop_toBottomOf="@id/tv_plot_synopsis" />
 
     </android.support.constraint.ConstraintLayout>
 

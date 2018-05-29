@@ -57,6 +57,7 @@ public class DetailActivity extends AppCompatActivity {
 
         //Set the user rating in the rating bar
         mMovieBinding.ratingBar.setMax(10);
+        mMovieBinding.ratingBar.setStepSize(0.1f);
         mMovieBinding.ratingBar.setRating((float) movie.getUserRating());
 
         //Set the user rating text

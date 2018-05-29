@@ -29,8 +29,6 @@
 
     <dimen name="rating_bar_margin_top">8dp</dimen>
 
-    <dimen name="rating_step_size">0.1</dimen>
-
     <dimen name="user_rating_margin_left">16dp</dimen>
 
     <dimen name="total_rating_margin_left">8dp</dimen>

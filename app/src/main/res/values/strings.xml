@@ -14,4 +14,14 @@
         <item>top_rated</item>
     </string-array>
 
+    <string name="movie_backdrop_content_description">Movie Backdrop</string>
+
+    <string name="movie_poster_content_description">Movie Poster</string>
+
+    <string name="rating_num_stars">10</string>
+
+    <string name="total_rating_label">/ 10</string>
+
+    <string name="count_label">users</string>
+
 </resources>

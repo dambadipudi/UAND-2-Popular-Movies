@@ -32,6 +32,8 @@ public class NetworkUtils {
 
     private static final String POSTER_SIZE = "w185/";
 
+    private static final String BACKDROP_SIZE = "w342/";
+
     //the movie/top_rated endpoint in order to sort the movies by top rated
     private static final String TOP_RATED_PATH = "top_rated";
 
@@ -120,5 +122,14 @@ public class NetworkUtils {
      */
     public static String getBasePosterImageURL() {
         return POSTER_IMAGE_BASE_URL + POSTER_SIZE;
+    }
+
+    /**
+     * This method returns the base url that needs to prepended to the backdrop path
+     *
+     * @return the path as a string
+     */
+    public static String getBaseBackdropImageURL() {
+        return POSTER_IMAGE_BASE_URL + BACKDROP_SIZE;
     }
 }

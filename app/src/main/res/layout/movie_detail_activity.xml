@@ -76,7 +76,6 @@
             android:layout_marginStart="@dimen/rating_bar_margin_left"
             android:layout_marginTop="@dimen/rating_bar_margin_top"
             android:numStars="@string/rating_num_stars"
-            android:stepSize="@dimen/rating_step_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider" />
 

@@ -79,7 +79,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                 .into(movieAdapterViewHolder.mPosterImageView);
 
         movieAdapterViewHolder.mTitle.setText(currentMovie.getTitle());
-        movieAdapterViewHolder.mReleaseYear.setText(DateUtils.getYearFromDateString(currentMovie.getReleaseDate()));
+        movieAdapterViewHolder.mReleaseYear.setText(DateUtils.getDateAsFormattedString(currentMovie.getReleaseDate(), "year"));
     }
 
     /**

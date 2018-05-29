@@ -22,6 +22,8 @@ android {
         }
 
     }
+
+    dataBinding.enabled = true;
 }
 
 // Adding a method to read the API key from secrets.properties file based on code from

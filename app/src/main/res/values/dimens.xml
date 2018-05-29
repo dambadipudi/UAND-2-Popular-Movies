@@ -2,4 +2,47 @@
 <resources>
     <!-- Dimensions used throughout the app -->
     <dimen name="margin">4dp</dimen>
+
+    <!-- Dimensions used in movie_detail_activity.xml -->
+
+    <dimen name="backdrop_poster_height">180dp</dimen>
+
+    <dimen name="empty_dimen">0dp</dimen>
+
+    <dimen name="poster_margin">16dp</dimen>
+
+    <dimen name="poster_vertical_bias">0.05</dimen>
+
+    <dimen name="poster_constraint_width_percentage">0.25</dimen>
+
+    <dimen name="original_title_margin_left">16dp</dimen>
+
+    <dimen name="original_title_margin_right">8dp</dimen>
+
+    <dimen name="release_date_margin">16dp</dimen>
+
+    <dimen name="divider_height">1dp</dimen>
+
+    <dimen name="divider_margin">16dp</dimen>
+
+    <dimen name="rating_bar_margin_left">16dp</dimen>
+
+    <dimen name="rating_bar_margin_top">8dp</dimen>
+
+    <dimen name="rating_step_size">0.1</dimen>
+
+    <dimen name="user_rating_margin_left">16dp</dimen>
+
+    <dimen name="total_rating_margin_left">8dp</dimen>
+
+    <dimen name="user_rating_count_margin_left">16dp</dimen>
+
+    <dimen name="count_label_margin_left">8dp</dimen>
+
+    <dimen name="plot_synopsis_margin_left">16dp</dimen>
+
+    <dimen name="plot_synopsis_margin_right">@dimen/plot_synopsis_margin_left</dimen>
+
+    <dimen name="plot_synopsis_margin_top">8dp</dimen>
+
 </resources>

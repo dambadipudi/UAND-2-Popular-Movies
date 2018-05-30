@@ -2,7 +2,7 @@ package com.example.divya_user.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Network;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -12,8 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -45,6 +43,14 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String SORT_BY_KEY = "sort_by";
 
+    private static final String DEFAULT_SORT_BY = "popular";
+
+    private static final String SORT_BY_POSITION_STATE = "sort_by_position_state";
+
+    private static final String RECYCLER_VIEW_STATE = "recycler_view_state";
+
+    private static Parcelable mRecyclerViewState;
+
     private static final String CLICKED_MOVIE_OBJECT = "clicked_movie_object";
 
     private int gridSpanCount = 3;
@@ -58,8 +64,7 @@ public class MainActivity extends AppCompatActivity implements
 
     // The page number from which data is returned by movieDB API
     private static int pageNumber = 1;
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    spinnerTouched = true; // User DID touched the spinner!
+                    spinnerTouched = true;
                 }
 
                 return false;
@@ -90,28 +95,58 @@ public class MainActivity extends AppCompatActivity implements
         mMovieAdapter = new MovieAdapter(this, this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        Bundle sortByParamBundle = new Bundle();
-        sortByParamBundle.putString(SORT_BY_KEY, "popular");
+        String sortByKey = DEFAULT_SORT_BY;
 
-        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, sortByParamBundle, this);
+        if(savedInstanceState != null) {
+            if(savedInstanceState.containsKey(SORT_BY_POSITION_STATE)) {
+                int spinnerPosition = savedInstanceState.getInt(SORT_BY_POSITION_STATE);
+                mSortBySpinner.setSelection(spinnerPosition);
+                sortByKey = getSortByKeyFromPosition(spinnerPosition);
+            }
+            if(savedInstanceState.containsKey(RECYCLER_VIEW_STATE)) {
+                mRecyclerViewState = savedInstanceState.getParcelable(RECYCLER_VIEW_STATE);
+            }
+        }
 
+        loadMovieData(sortByKey);
     }
 
-     /*
-      * This method handles spinner item selection. Only if the spinner is touched, the loader is restarted
-      * as this method also gets called during orientation changes
+    /**
+    * Returns the key based on the position of the Sort By Label selected
+    *
+    * @param position of the Sort By Label in the spinner
+    */
+    private String getSortByKeyFromPosition(int position) {
+        return getResources().getStringArray(R.array.spinner_keys)[position];
+    }
+
+    /**
+    * Creates a bundle for the loader and creates or restarts the loader to talk to the movieDB API
+    * in a background thread
+    *
+    * @param sortByKey This is the key for the Sort By Label selected in the spinner
+    */
+    private void loadMovieData(String sortByKey) {
+        Bundle loaderBundle = new Bundle();
+        loaderBundle.putString(SORT_BY_KEY, sortByKey);
+
+        if (getSupportLoaderManager().getLoader(ID_MOVIE_LOADER) != null) {
+            getSupportLoaderManager().restartLoader(ID_MOVIE_LOADER, loaderBundle, this);
+        } else {
+            getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, loaderBundle, this);
+        }
+    }
+
+     /**
+      * This method handles spinner item selection. Only if the spinner is touched, the loader's data is
+      * invalidated and then it is restarted. This is to avoid loader being restarted for a second
+      * time during orientation changes
       */
      @Override
      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(spinnerTouched) {
-            //When the selection changes, call the respective methods to make the API call
-            String sortByKey = getResources().getStringArray(R.array.spinner_keys)[position];
-
-            Bundle sortByParamBundle = new Bundle();
-            sortByParamBundle.putString(SORT_BY_KEY, sortByKey);
-
             invalidateData();
-            getSupportLoaderManager().restartLoader(ID_MOVIE_LOADER, sortByParamBundle, this);
+            loadMovieData(getSortByKeyFromPosition(position));
         }
      }
 
@@ -120,10 +155,20 @@ public class MainActivity extends AppCompatActivity implements
 
      }
 
+     /**
+      * This method removes any saved data or layout state of the Recycler View
+      *
+      */
      private void invalidateData() {
         mMovieAdapter.setMovieData(null);
+        mRecyclerViewState = null;
      }
 
+     /**
+      * Called when a movie poster is clicked. It creates an explicit intent to the DetailActivity class
+      *
+      * @param clickedMovieObject this object is passed from the ViewHolder It needs to be a Parcelable class
+      */
      @Override
      public void onPosterClicked(Movie clickedMovieObject) {
          Intent intent = new Intent(this, DetailActivity.class);
@@ -131,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements
          startActivity(intent);
      }
 
-             /**
+     /**
       * Loader class to make the network call to the movie DB API
       */
      private static class MovieAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
@@ -230,6 +275,9 @@ public class MainActivity extends AppCompatActivity implements
             Toast.makeText(this, "Oops", Toast.LENGTH_LONG).show();
         } else {
             mMovieAdapter.setMovieData(data);
+            if(mRecyclerViewState != null) {
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(mRecyclerViewState);
+            }
         }
     }
 
@@ -243,4 +291,19 @@ public class MainActivity extends AppCompatActivity implements
     public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
 
     }
+
+     /**
+      * Called when to save the state of the spinner and the RecyclerView in order for it to be restored
+      * when we come back to the activity
+      *
+      * @param outState The bundle in which to save the state
+      */
+
+     @Override
+     protected void onSaveInstanceState(Bundle outState) {
+         super.onSaveInstanceState(outState);
+
+         outState.putInt(SORT_BY_POSITION_STATE, mSortBySpinner.getSelectedItemPosition());
+         outState.putParcelable(RECYCLER_VIEW_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
+     }
 }

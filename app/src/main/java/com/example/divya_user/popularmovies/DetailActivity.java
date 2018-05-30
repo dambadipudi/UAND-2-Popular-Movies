@@ -47,6 +47,8 @@ public class DetailActivity extends AppCompatActivity {
         //Set the poster image
         Picasso.with(this)
                 .load(NetworkUtils.getBasePosterImageURL() + movie.getPosterPath())
+                .placeholder(R.drawable.ic_movie)
+                .error(R.drawable.ic_error)
                 .into(mMovieBinding.ivMoviePoster);
 
         //Set the original title

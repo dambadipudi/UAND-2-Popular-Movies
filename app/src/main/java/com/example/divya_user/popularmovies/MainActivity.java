@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements
 
     // The page number from which data is returned by movieDB API
     private static int pageNumber = 1;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

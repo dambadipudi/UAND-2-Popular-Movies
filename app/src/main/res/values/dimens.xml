@@ -15,6 +15,8 @@
 
     <dimen name="poster_constraint_width_percentage">0.25</dimen>
 
+    <dimen name="title_constraint_width_percentage">0.60</dimen>
+
     <dimen name="original_title_margin_left">16dp</dimen>
 
     <dimen name="original_title_margin_right">8dp</dimen>

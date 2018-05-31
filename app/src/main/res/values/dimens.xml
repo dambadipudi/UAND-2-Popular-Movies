@@ -3,6 +3,10 @@
     <!-- Dimensions used throughout the app -->
     <dimen name="margin">4dp</dimen>
 
+    <dimen name="network_error_margin">20dp</dimen>
+
+    <dimen name="loading_size">48dp</dimen>
+
     <!-- Dimensions used in movie_detail_activity.xml -->
 
     <dimen name="backdrop_poster_height">180dp</dimen>

@@ -37,11 +37,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/network_error_margin"
             style="@style/TextAppearance.AppCompat.Small"
-            android:text="Refresh"
+            android:text="@string/refresh"
             android:drawableTop="@drawable/ic_refresh"
             android:layout_below="@id/tv_error"
             android:layout_centerHorizontal="true"
-            android:clickable="true" />
+            android:clickable="true"
+            android:focusable="true"/>
 
     </RelativeLayout>
 
@@ -71,8 +72,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin"
+                android:layout_marginStart="@dimen/margin"
                 android:entries="@array/spinner_labels"
-                android:layout_toRightOf="@id/spinner_label"/>
+                android:layout_toRightOf="@id/spinner_label"
+                android:layout_toEndOf="@id/spinner_label"/>
 
         </RelativeLayout>
 

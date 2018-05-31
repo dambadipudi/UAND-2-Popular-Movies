@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.divya_user.popularmovies.BuildConfig;
 
@@ -21,8 +20,6 @@ import java.util.Scanner;
  */
 
 public class NetworkUtils {
-
-    private static final String TAG = NetworkUtils.class.getSimpleName();
 
     //For both top rated and popular movies, we are using the movie endpoint, so that is the base URL
     private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
@@ -65,8 +62,7 @@ public class NetworkUtils {
                 .appendQueryParameter(PAGE_PARAM, Integer.toString(pageNumber))
                 .build();
 
-        URL movieDBURL = new URL(movieDBUri.toString());
-        return movieDBURL;
+        return new URL(movieDBUri.toString());
     }
 
     /**

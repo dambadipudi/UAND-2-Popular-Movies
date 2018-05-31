@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String CLICKED_MOVIE_OBJECT = "clicked_movie_object";
 
-    private int gridSpanCount = 3;
-
     private boolean spinnerTouched = false;
 
     private RecyclerView mRecyclerView;
@@ -112,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements
         mErrorLayout = findViewById(R.id.rl_error_layout);
 
         mMovieLayout = findViewById(R.id.ll_movie_layout);
+
+        int gridSpanCount = 3;
 
         GridLayoutManager layoutManager
                 = new GridLayoutManager(this, gridSpanCount);
@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements
         List<Movie> cachedMoviesList;
         String mSortByKey;
 
-        public MovieAsyncTaskLoader(String sortByKey, @NonNull Context context) {
+        MovieAsyncTaskLoader(String sortByKey, @NonNull Context context) {
             super(context);
             mSortByKey = sortByKey;
         }
@@ -263,8 +263,7 @@ public class MainActivity extends AppCompatActivity implements
                 if(movieURL != null) {
                     movieJSON = NetworkUtils.getResponseFromHttpUrl(movieURL);
                     if(movieJSON != null) {
-                        List<Movie> moviesList = JSONUtils.getListOfMoviesFromJSON(movieJSON);
-                        return moviesList;
+                        return JSONUtils.getListOfMoviesFromJSON(movieJSON);
                     }
                 }
                 return null;

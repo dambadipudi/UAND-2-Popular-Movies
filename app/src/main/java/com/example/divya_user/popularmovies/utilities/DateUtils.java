@@ -50,8 +50,7 @@ public class DateUtils {
                     return date;
             }
 
-            String newDateString = newDateFormat.format(dateObj);
-            return newDateString;
+            return newDateFormat.format(dateObj);
         } catch (ParseException e) {
             e.printStackTrace();
             return "N/A";

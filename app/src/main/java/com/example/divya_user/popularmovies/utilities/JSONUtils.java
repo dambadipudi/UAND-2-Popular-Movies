@@ -38,8 +38,7 @@ public class JSONUtils {
     public static int getTotalPages(String jsonString) {
         try {
             JSONObject movieJSONObject = new JSONObject(jsonString);
-            int totalPages = movieJSONObject.getInt(TOTAL_PAGES);
-            return totalPages;
+            return movieJSONObject.getInt(TOTAL_PAGES);
 
         } catch (JSONException e) {
             e.printStackTrace();

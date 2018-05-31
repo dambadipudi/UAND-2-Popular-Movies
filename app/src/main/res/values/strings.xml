@@ -3,6 +3,8 @@
 
     <string name="network_connection_error">No Network Connection!</string>
 
+    <string name="refresh">Refresh</string>
+
     <string name="spinner_label">Sort By: </string>
 
     <string-array name="spinner_labels">

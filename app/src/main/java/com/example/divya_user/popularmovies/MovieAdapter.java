@@ -3,7 +3,6 @@ package com.example.divya_user.popularmovies;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +34,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * Constructor for MovieAdapter that accepts the context of the calling class
      * and a class that implements the MoviePosterClickListener interface
      *
-     * @param context
-     * @param listener
+     * @param context of the calling class
+     * @param listener is of the class that implements the clicklistener, which is the calling class in this case
      */
     public MovieAdapter(Context context, MoviePosterClickListener listener) {
         mContext = context;
@@ -52,7 +51,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      *
      * @param viewGroup
      * @param viewType
-     * @return
+     * @return MovieAdapterViewHolder
      */
     @NonNull
     @Override
@@ -94,24 +93,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     /**
-     * This inner class is used to create the ViewHolder object mspped to the layout elements
+     * This inner class is used to create the ViewHolder object mapped to the layout elements
      */
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder
                             implements View.OnClickListener {
-        public final ImageView mPosterImageView;
-        public final TextView mTitle;
-        public final TextView mReleaseYear;
+        final ImageView mPosterImageView;
+        final TextView mTitle;
+        final TextView mReleaseYear;
 
         /**
          *  Constructor to initialise the layout elements
          *
          * @param view
          */
-        public MovieAdapterViewHolder(View view) {
+        MovieAdapterViewHolder(View view) {
             super(view);
-            mPosterImageView = (ImageView) view.findViewById(R.id.iv_movie_poster);
-            mTitle = (TextView) view.findViewById(R.id.tv_title);
-            mReleaseYear = (TextView) view.findViewById(R.id.tv_release_year);
+            mPosterImageView = view.findViewById(R.id.iv_movie_poster);
+            mTitle = view.findViewById(R.id.tv_title);
+            mReleaseYear =  view.findViewById(R.id.tv_release_year);
             itemView.setOnClickListener(this);
         }
 

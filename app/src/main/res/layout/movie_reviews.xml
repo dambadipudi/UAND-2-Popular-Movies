@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+            android:numStars="@string/rating_num_stars" />
+
+        <TextView
+            android:id="@+id/tv_user_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/user_rating_margin_left"
+            android:layout_marginStart="@dimen/user_rating_margin_left"
+            app:layout_constraintStart_toEndOf="@id/rating_bar"
+            app:layout_constraintTop_toBottomOf="@id/rating_bar"
+            app:layout_constraintBottom_toTopOf="@id/rating_bar" />
+
+        <TextView
+            android:id="@+id/tv_total_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/total_rating_margin_left"
+            android:layout_marginStart="@dimen/total_rating_margin_left"
+            app:layout_constraintStart_toEndOf="@id/tv_user_rating"
+            app:layout_constraintBottom_toBottomOf="@id/tv_user_rating"
+            android:text="@string/total_rating_label" />
+
+        <TextView
+            android:id="@+id/tv_user_rating_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/user_rating_count_margin_left"
+            android:layout_marginStart="@dimen/user_rating_count_margin_left"
+            app:layout_constraintStart_toEndOf="@id/tv_total_rating"
+            app:layout_constraintTop_toBottomOf="@id/rating_bar"
+            app:layout_constraintBottom_toTopOf="@id/rating_bar" />
+
+        <TextView
+            android:id="@+id/tv_count_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/count_label_margin_left"
+            android:layout_marginStart="@dimen/count_label_margin_left"
+            app:layout_constraintStart_toEndOf="@id/tv_user_rating_count"
+            app:layout_constraintBottom_toBottomOf="@id/tv_user_rating_count"
+            android:text="@string/count_label"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

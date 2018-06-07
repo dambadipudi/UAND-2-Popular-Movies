@@ -5,46 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/rl_error_layout"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:visibility="invisible"
-        android:gravity="center" >
-
-        <ImageView
-            android:id="@+id/iv_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_error"
-            android:layout_centerHorizontal="true"
-            android:contentDescription="@string/network_connection_error" />
-
-        <TextView
-            android:id="@+id/tv_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:text="@string/network_connection_error"
-            android:layout_below="@id/iv_error"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:id="@+id/tv_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/network_error_margin"
-            style="@style/TextAppearance.AppCompat.Small"
-            android:text="@string/refresh"
-            android:drawableTop="@drawable/ic_refresh"
-            android:layout_below="@id/tv_error"
-            android:layout_centerHorizontal="true"
-            android:clickable="true"
-            android:focusable="true"/>
-
-    </RelativeLayout>
+    <include layout="@layout/network_error_layout" />
 
     <LinearLayout
         android:id="@+id/ll_movie_layout"
@@ -53,31 +14,7 @@
         android:orientation="vertical"
         android:visibility="invisible">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin"
-            android:padding="@dimen/margin"
-            android:layout_gravity="center">
-
-            <TextView
-                android:id="@+id/spinner_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/spinner_label"
-                android:layout_centerVertical="true" />
-
-            <Spinner
-                android:id="@+id/spinner_sort_by"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin"
-                android:layout_marginStart="@dimen/margin"
-                android:entries="@array/spinner_labels"
-                android:layout_toRightOf="@id/spinner_label"
-                android:layout_toEndOf="@id/spinner_label"/>
-
-        </RelativeLayout>
+        <include layout="@layout/sort_by_spinner" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_movies"

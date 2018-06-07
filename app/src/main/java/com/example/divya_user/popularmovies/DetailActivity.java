@@ -58,15 +58,15 @@ public class DetailActivity extends AppCompatActivity {
         mMovieBinding.tvReleaseDate.setText(DateUtils.getDateAsFormattedString(movie.getReleaseDate(), "month_year"));
 
         //Set the user rating in the rating bar
-        mMovieBinding.ratingBar.setMax(10);
-        mMovieBinding.ratingBar.setStepSize(0.1f);
-        mMovieBinding.ratingBar.setRating((float) movie.getUserRating());
+        mMovieBinding.movieReviews.ratingBar.setMax(10);
+        mMovieBinding.movieReviews.ratingBar.setStepSize(0.1f);
+        mMovieBinding.movieReviews.ratingBar.setRating((float) movie.getUserRating());
 
         //Set the user rating text
-        mMovieBinding.tvUserRating.setText(Double.toString(movie.getUserRating()));
+        mMovieBinding.movieReviews.tvUserRating.setText(Double.toString(movie.getUserRating()));
 
         //Set the total user count
-        mMovieBinding.tvUserRatingCount.setText(Integer.toString(movie.getUserRatingCount()));
+        mMovieBinding.movieReviews.tvUserRatingCount.setText(Integer.toString(movie.getUserRatingCount()));
 
         //Set the plot synopsis
         mMovieBinding.tvPlotSynopsis.setText(movie.getPlotSynopsis());

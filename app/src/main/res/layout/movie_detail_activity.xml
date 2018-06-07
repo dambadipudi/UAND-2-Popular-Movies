@@ -62,73 +62,9 @@
 
         <View
             android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:layout_margin="@dimen/divider_margin"
-            android:background="@android:color/darker_gray"
+            style="@style/DividerStyle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster" />
-
-        <RatingBar
-            android:id="@+id/ratingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Base.Widget.AppCompat.RatingBar.Small"
-            android:layout_marginLeft="@dimen/rating_bar_margin_left"
-            android:layout_marginStart="@dimen/rating_bar_margin_left"
-            android:layout_marginTop="@dimen/rating_bar_margin_top"
-            android:numStars="@string/rating_num_stars"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
-
-        <TextView
-            android:id="@+id/tv_user_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/user_rating_margin_left"
-            android:layout_marginStart="@dimen/user_rating_margin_left"
-            app:layout_constraintStart_toEndOf="@id/ratingBar"
-            app:layout_constraintTop_toBottomOf="@id/ratingBar"
-            app:layout_constraintBottom_toTopOf="@id/ratingBar" />
-
-        <TextView
-            android:id="@+id/tv_total_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/total_rating_margin_left"
-            android:layout_marginStart="@dimen/total_rating_margin_left"
-            app:layout_constraintStart_toEndOf="@id/tv_user_rating"
-            app:layout_constraintBottom_toBottomOf="@id/tv_user_rating"
-            android:text="@string/total_rating_label" />
-
-        <TextView
-            android:id="@+id/tv_user_rating_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/user_rating_count_margin_left"
-            android:layout_marginStart="@dimen/user_rating_count_margin_left"
-            app:layout_constraintStart_toEndOf="@id/tv_total_rating"
-            app:layout_constraintTop_toBottomOf="@id/ratingBar"
-            app:layout_constraintBottom_toTopOf="@id/ratingBar" />
-
-        <TextView
-            android:id="@+id/tv_count_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/count_label_margin_left"
-            android:layout_marginStart="@dimen/count_label_margin_left"
-            app:layout_constraintStart_toEndOf="@id/tv_user_rating_count"
-            app:layout_constraintBottom_toBottomOf="@id/tv_user_rating_count"
-            android:text="@string/count_label"/>
-
-        <View
-            android:id="@+id/divider_rating"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:layout_margin="@dimen/divider_margin"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
         <TextView
             android:id="@+id/tv_plot_synopsis"
@@ -140,16 +76,31 @@
             android:layout_marginRight="@dimen/plot_synopsis_margin_right"
             android:layout_marginTop="@dimen/plot_synopsis_margin_top"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_rating" />
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <View
             android:id="@+id/divider_plot_synopsis"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:layout_margin="@dimen/divider_margin"
-            android:background="@android:color/darker_gray"
+            style="@style/DividerStyle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_plot_synopsis" />
+
+        <include
+            android:id="@+id/movie_reviews"
+            layout="@layout/movie_reviews"
+            android:layout_width="@dimen/empty_dimen"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/rating_bar_margin_left"
+            android:layout_marginStart="@dimen/rating_bar_margin_left"
+            android:layout_marginTop="@dimen/rating_bar_margin_top"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_plot_synopsis" />
+
+        <View
+            android:id="@+id/divider_rating"
+            style="@style/DividerStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movie_reviews" />
+
 
     </android.support.constraint.ConstraintLayout>
 

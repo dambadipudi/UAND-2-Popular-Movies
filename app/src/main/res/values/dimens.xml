@@ -49,4 +49,10 @@
 
     <dimen name="plot_synopsis_margin_top">8dp</dimen>
 
+    <dimen name="trailer_layout_height">100dp</dimen>
+
+    <dimen name="trailers_margin_left">8dp</dimen>
+
+    <dimen name="trailers_margin_right">8dp</dimen>
+
 </resources>

@@ -2,9 +2,12 @@ package com.example.divya_user.popularmovies;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.example.divya_user.popularmovies.databinding.MovieDetailActivityBinding;
 import com.example.divya_user.popularmovies.model.Movie;
@@ -12,11 +15,22 @@ import com.example.divya_user.popularmovies.utilities.DateUtils;
 import com.example.divya_user.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-public class DetailActivity extends AppCompatActivity {
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DetailActivity extends AppCompatActivity implements
+        TrailerAdapter.TrailerClickListener
+            {
 
     private static final String CLICKED_MOVIE_OBJECT = "clicked_movie_object";
 
     private MovieDetailActivityBinding mMovieBinding;
+
+    private RecyclerView mTrailerRecyclerView;
+
+    private TrailerAdapter mTrailerAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,5 +85,44 @@ public class DetailActivity extends AppCompatActivity {
         //Set the plot synopsis
         mMovieBinding.tvPlotSynopsis.setText(movie.getPlotSynopsis());
 
+        //Set the movie trailers
+        mTrailerRecyclerView = mMovieBinding.rvTrailers;
+
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mTrailerRecyclerView.setLayoutManager(layoutManager);
+
+        mTrailerRecyclerView.setHasFixedSize(true);
+
+        mTrailerAdapter = new TrailerAdapter(this, this);
+        mTrailerRecyclerView.setAdapter(mTrailerAdapter);
+
+        List<String> youtubeKeys = new ArrayList();
+        youtubeKeys.add("Z5ezsReZcxU");
+        youtubeKeys.add("2-5Wv9UGkN8");
+        youtubeKeys.add("xZNBFcwd7zc");
+        youtubeKeys.add("D86RtevtfrA");
+        youtubeKeys.add("20bpjtCbCz0");
+        youtubeKeys.add("bI31WqFDxNs");
+
+        mTrailerAdapter.setTrailerKeys(youtubeKeys);
+
     }
-}
+
+        @Override
+        public void onTrailerClicked(String trailerKey) {
+
+            Uri trailerUri;
+            try {
+                trailerUri = NetworkUtils.getTrailerUri(trailerKey);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            Intent implicitIntent = new Intent(Intent.ACTION_VIEW, trailerUri);
+            if (implicitIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(implicitIntent);
+            }
+        }
+    }

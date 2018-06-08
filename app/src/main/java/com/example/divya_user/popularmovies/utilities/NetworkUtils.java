@@ -43,6 +43,12 @@ public class NetworkUtils {
     //The page number to be specified for subsequent requests
     private static final String PAGE_PARAM = "page";
 
+    //For youtube Base URL
+    private static final String YOUTUBE_BASE_URL = "https://youtube.com/watch";
+
+    //The youtube video Key
+    private static final String YOUTUBE_KEY_PARAM = "v";
+
     /**
      * Builds the URL used to talk to the movie DB API. It builds the URL based on the
      * sort type and the page number to be downloaded
@@ -127,5 +133,18 @@ public class NetworkUtils {
      */
     public static String getBaseBackdropImageURL() {
         return POSTER_IMAGE_BASE_URL + BACKDROP_SIZE;
+    }
+
+    /**
+     * Builds the Uri for the youtube trailer with the trailer key used to identify the video
+     *
+     * @param trailerKey The youtube's key to identify a video
+     * @return The URL to use to query the movie DB API
+     */
+    public static Uri getTrailerUri(String trailerKey) throws MalformedURLException {
+
+       return Uri.parse(YOUTUBE_BASE_URL).buildUpon()
+                .appendQueryParameter(YOUTUBE_KEY_PARAM, trailerKey)
+                .build();
     }
 }

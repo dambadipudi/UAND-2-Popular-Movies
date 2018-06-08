@@ -22,6 +22,8 @@
 
     <string name="movie_poster_content_description">Movie Poster</string>
 
+    <string name="movie_trailer_content_description">Movie Trailer</string>
+
     <string name="rating_num_stars">10</string>
 
     <string name="total_rating_label">/ 10</string>

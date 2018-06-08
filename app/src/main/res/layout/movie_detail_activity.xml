@@ -84,6 +84,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_plot_synopsis" />
 
+        <FrameLayout
+            android:id="@+id/trailers"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/trailer_layout_height"
+            android:layout_marginLeft="@dimen/trailers_margin_left"
+            android:layout_marginRight="@dimen/trailers_margin_right"
+            android:layout_marginStart="@dimen/trailers_margin_left"
+            android:layout_marginEnd="@dimen/trailers_margin_right"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_plot_synopsis">
+
+            <include layout="@layout/network_error_layout" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_trailers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin" />
+
+        </FrameLayout>
+
+        <View
+            android:id="@+id/divider_trailers"
+            style="@style/DividerStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/trailers" />
+
+
         <include
             android:id="@+id/movie_reviews"
             layout="@layout/movie_reviews"
@@ -93,7 +121,7 @@
             android:layout_marginStart="@dimen/rating_bar_margin_left"
             android:layout_marginTop="@dimen/rating_bar_margin_top"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_plot_synopsis" />
+            app:layout_constraintTop_toBottomOf="@id/divider_trailers" />
 
         <View
             android:id="@+id/divider_rating"

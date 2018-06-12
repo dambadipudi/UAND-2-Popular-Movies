@@ -19,6 +19,8 @@ public class JSONUtils {
 
     private final static String RESULTS = "results";
 
+    private final static String ID = "id";
+
     private final static String TITLE = "title";
 
     private final static String ORIGINAL_TITLE = "original_title";
@@ -34,6 +36,8 @@ public class JSONUtils {
     private final static String USER_RATING = "vote_average";
 
     private final static String RELEASE_DATE = "release_date";
+
+    private final static String KEY = "key";
 
     public static int getTotalPages(String jsonString) {
         try {
@@ -57,7 +61,8 @@ public class JSONUtils {
             for(int index = 0; index < resultsJSONArray.length(); index++) {
 
                 JSONObject currentMovieJSONObject = resultsJSONArray.getJSONObject(index);
-                Movie currentMovie = new Movie(currentMovieJSONObject.getString(TITLE),
+                Movie currentMovie = new Movie( currentMovieJSONObject.getLong(ID),
+                                                currentMovieJSONObject.getString(TITLE),
                                                 currentMovieJSONObject.getString(ORIGINAL_TITLE),
                                                 currentMovieJSONObject.getString(POSTER_PATH),
                                                 currentMovieJSONObject.getString(BACKDROP_PATH),
@@ -70,6 +75,29 @@ public class JSONUtils {
             }
 
             return moviesList;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static List<String> getListOfTrailersFromJSON(String jsonString) {
+        try {
+            JSONObject trailersJSONObject = new JSONObject(jsonString);
+
+            JSONArray resultsJSONArray = trailersJSONObject.getJSONArray(RESULTS);
+
+            List<String> trailerYoutubeKeysList = new ArrayList<>();
+
+            for(int index = 0; index < resultsJSONArray.length(); index++) {
+
+                JSONObject trailerJSONObject = resultsJSONArray.getJSONObject(index);
+                trailerYoutubeKeysList.add(trailerJSONObject.getString(KEY));
+            }
+
+            return trailerYoutubeKeysList;
 
         } catch (JSONException e) {
             e.printStackTrace();

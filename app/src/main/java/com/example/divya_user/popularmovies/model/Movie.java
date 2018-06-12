@@ -11,6 +11,8 @@ import android.os.Parcelable;
 
 public class Movie implements Parcelable{
 
+    private long movieId;
+
     private String title;
 
     private String originalTitle;
@@ -27,7 +29,8 @@ public class Movie implements Parcelable{
 
     private String releaseDate;
 
-    public Movie(String title,
+    public Movie(long movieId,
+                 String title,
                  String originalTitle,
                  String posterPath,
                  String backdropPath,
@@ -35,6 +38,7 @@ public class Movie implements Parcelable{
                  double userRating,
                  int userRatingCount,
                  String releasedDate) {
+        this.movieId = movieId;
         this.title = title;
         this.originalTitle = originalTitle;
         this.posterPath = posterPath;
@@ -46,6 +50,7 @@ public class Movie implements Parcelable{
     }
 
     private Movie(Parcel in) {
+        movieId = in.readLong();
         title = in.readString();
         originalTitle = in.readString();
         posterPath = in.readString();
@@ -67,6 +72,14 @@ public class Movie implements Parcelable{
             return new Movie[size];
         }
     };
+
+    public long getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(long movieId) {
+        this.movieId = movieId;
+    }
 
     public String getTitle() {
         return title;
@@ -134,9 +147,15 @@ public class Movie implements Parcelable{
 
     @Override
     public String toString() {
-        return "originalTitle: " + originalTitle + " posterPath: " + posterPath + " backdropPath " +
-                backdropPath + "plotSynopsis: " + plotSynopsis + "userRating: " + userRating +
-                "userRatingCount: " + userRatingCount + " releaseDate: " + releaseDate;
+        return  "movieId: " + movieId +
+                " title: " + title +
+                " originalTitle: " + originalTitle +
+                " posterPath: " + posterPath +
+                " backdropPath: " + backdropPath +
+                " plotSynopsis: " + plotSynopsis +
+                " userRating: " + userRating +
+                " userRatingCount: " + userRatingCount +
+                " releaseDate: " + releaseDate;
     }
 
     @Override
@@ -146,6 +165,7 @@ public class Movie implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(movieId);
         dest.writeString(title);
         dest.writeString(originalTitle);
         dest.writeString(posterPath);

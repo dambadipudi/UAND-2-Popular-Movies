@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Popular Movies</string>
 
-    <string name="network_connection_error">No Network Connection!</string>
+    <string name="network_connection_error">No Network Connection </string>
 
     <string name="refresh">Refresh</string>
 
@@ -29,5 +29,11 @@
     <string name="total_rating_label">/ 10</string>
 
     <string name="count_label">users</string>
+
+    <string name="plot_synopsis_title">Plot Synopsis</string>
+
+    <string name="trailers_title">Trailers</string>
+
+    <string name="reviews_title">Reviews</string>
 
 </resources>

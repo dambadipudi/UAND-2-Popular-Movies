@@ -37,6 +37,9 @@ public class NetworkUtils {
     //the movie/popular endpoint in order to sort the movies by most popular
     private static final String POPULAR_PATH = "popular";
 
+    //the movie/top_rated endpoint in order to retrieve the trailers
+    private static final String TRAILERS_PATH = "videos";
+
     //The API_Key that is required to talk to the movie DB API
     private static final String API_KEY_PARAM = "api_key";
 
@@ -66,6 +69,24 @@ public class NetworkUtils {
         Uri movieDBUri = Uri.parse(BASE_URL + sortType).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, BuildConfig.API_KEY)
                 .appendQueryParameter(PAGE_PARAM, Integer.toString(pageNumber))
+                .build();
+
+        return new URL(movieDBUri.toString());
+    }
+
+    /**
+     * Builds the URL used to talk to the movie DB API to retrieve the trailers. It builds the URL based on the
+     * movieId
+     *
+     * @param movieId The movie ID for which to retrieve the trailers
+     * @return The URL to use to query the movie DB API for trailers
+     */
+    public static URL getTrailersListURL(long movieId) throws MalformedURLException {
+
+        Uri movieDBUri = Uri.parse(BASE_URL).buildUpon()
+                .appendPath(Long.toString(movieId))
+                .appendPath(TRAILERS_PATH)
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.API_KEY)
                 .build();
 
         return new URL(movieDBUri.toString());

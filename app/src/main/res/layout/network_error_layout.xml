@@ -1,43 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- This layout file contains the layout to diaplay when there is no internet connection -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rl_error_layout"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:visibility="invisible"
-    android:gravity="center" >
+<layout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rl_error_layout"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:gravity="center" >
 
-    <ImageView
-        android:id="@+id/iv_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_error"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@string/network_connection_error" />
+        <ImageView
+            android:id="@+id/iv_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_error"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/network_connection_error" />
 
-    <TextView
-        android:id="@+id/tv_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/TextAppearance.AppCompat.Title"
-        android:text="@string/network_connection_error"
-        android:layout_below="@id/iv_error"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:id="@+id/tv_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:text="@string/network_connection_error"
+            android:layout_below="@id/iv_error"
+            android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:id="@+id/tv_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/network_error_margin"
-        style="@style/TextAppearance.AppCompat.Small"
-        android:text="@string/refresh"
-        android:drawableTop="@drawable/ic_refresh"
-        android:layout_below="@id/tv_error"
-        android:layout_centerHorizontal="true"
-        android:clickable="true"
-        android:focusable="true"/>
+        <TextView
+            android:id="@+id/tv_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/network_error_margin"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:text="@string/refresh"
+            android:drawableTop="@drawable/ic_refresh"
+            android:layout_below="@id/tv_error"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:focusable="true"/>
 
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

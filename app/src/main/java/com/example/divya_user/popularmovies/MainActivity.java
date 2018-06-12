@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.divya_user.popularmovies.model.Movie;
 import com.example.divya_user.popularmovies.utilities.JSONUtils;
+import com.example.divya_user.popularmovies.utilities.LoaderUtils;
 import com.example.divya_user.popularmovies.utilities.NetworkUtils;
 
 import java.io.IOException;
@@ -223,68 +224,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * Loader class to make the network call to the movie DB API
-     */
-    private static class MovieAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
-
-
-        List<Movie> cachedMoviesList;
-        String mSortByKey;
-
-        MovieAsyncTaskLoader(String sortByKey, @NonNull Context context) {
-            super(context);
-            mSortByKey = sortByKey;
-        }
-
-        @Override
-        protected void onStartLoading() {
-            if (cachedMoviesList != null) {
-                //To skip loadInBackground call
-                deliverResult(cachedMoviesList);
-            }else{
-                forceLoad();
-            }
-        }
-
-        /**
-         * Called when a load is forced
-         *
-         * @return A List of Movie objects created from JSON Response
-         * obtained from network call to movie DB APU
-         */
-        @Nullable
-        @Override
-        public List<Movie> loadInBackground() {
-            try {
-                URL movieURL = NetworkUtils.getMovieDBURL(mSortByKey, pageNumber);
-
-                String movieJSON;
-
-                if(movieURL != null) {
-                    movieJSON = NetworkUtils.getResponseFromHttpUrl(movieURL);
-                    if(movieJSON != null) {
-                        return JSONUtils.getListOfMoviesFromJSON(movieJSON);
-                    }
-                }
-                return null;
-            } catch(MalformedURLException e) {
-                e.printStackTrace();
-                return null;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        public void deliverResult(List<Movie> data) {
-            cachedMoviesList = data;
-            super.deliverResult(data);
-        }
-
-    }
-
-    /**
      * Called when a new Loader needs to be
      * created.
      *
@@ -299,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements
 
             case ID_MOVIE_LOADER:
                 if(bundle != null) {
-                    return new MainActivity.MovieAsyncTaskLoader(bundle.getString(SORT_BY_KEY), this);
+                    return new LoaderUtils.MovieAsyncTaskLoader(bundle.getString(SORT_BY_KEY), pageNumber, this);
                 }
             default:
                 throw new RuntimeException("Loader Not Implemented: " + loaderId);

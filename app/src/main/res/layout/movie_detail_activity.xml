@@ -95,13 +95,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_plot_synopsis">
 
-            <include layout="@layout/network_error_layout" />
+            <include
+                android:id="@+id/trailers_error"
+                layout="@layout/network_error_layout" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_trailers"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/margin" />
+
+            <ProgressBar
+                android:id="@+id/pb_loading"
+                android:layout_width="@dimen/loading_size"
+                android:layout_height="@dimen/loading_size"
+                android:layout_gravity="center"
+                android:visibility="visible" />
 
         </FrameLayout>
 

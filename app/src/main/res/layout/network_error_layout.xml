@@ -11,29 +11,27 @@
         android:visibility="invisible"
         android:gravity="center" >
 
+        <TextView
+            android:id="@+id/tv_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/network_connection_error"
+            android:layout_centerHorizontal="true" />
+
         <ImageView
             android:id="@+id/iv_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_error"
             android:layout_centerHorizontal="true"
+            android:layout_toEndOf="@id/tv_error"
             android:contentDescription="@string/network_connection_error" />
-
-        <TextView
-            android:id="@+id/tv_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:text="@string/network_connection_error"
-            android:layout_below="@id/iv_error"
-            android:layout_centerHorizontal="true" />
 
         <TextView
             android:id="@+id/tv_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/network_error_margin"
-            style="@style/TextAppearance.AppCompat.Small"
             android:text="@string/refresh"
             android:drawableTop="@drawable/ic_refresh"
             android:layout_below="@id/tv_error"

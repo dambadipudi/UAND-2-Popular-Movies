@@ -67,6 +67,13 @@
             app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster" />
 
         <TextView
+            android:id="@+id/tv_plot_synopsis_title"
+            style="@style/MovieDetailTitleStyle"
+            android:text="@string/plot_synopsis_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+        <TextView
             android:id="@+id/tv_plot_synopsis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,7 +83,7 @@
             android:layout_marginRight="@dimen/plot_synopsis_margin_right"
             android:layout_marginTop="@dimen/plot_synopsis_margin_top"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/tv_plot_synopsis_title" />
 
         <View
             android:id="@+id/divider_plot_synopsis"
@@ -84,16 +91,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_plot_synopsis" />
 
-        <FrameLayout
+        <TextView
+            android:id="@+id/tv_trailers_title"
+            style="@style/MovieDetailTitleStyle"
+            android:text="@string/trailers_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider_plot_synopsis" />
+
+            <FrameLayout
             android:id="@+id/trailers"
             android:layout_width="match_parent"
             android:layout_height="@dimen/trailer_layout_height"
-            android:layout_marginLeft="@dimen/trailers_margin_left"
-            android:layout_marginRight="@dimen/trailers_margin_right"
             android:layout_marginStart="@dimen/trailers_margin_left"
             android:layout_marginEnd="@dimen/trailers_margin_right"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_plot_synopsis">
+            app:layout_constraintTop_toBottomOf="@id/tv_trailers_title">
 
             <include
                 android:id="@+id/trailers_error"
@@ -120,6 +132,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/trailers" />
 
+        <TextView
+            android:id="@+id/tv_reviews_title"
+            style="@style/MovieDetailTitleStyle"
+            android:text="@string/reviews_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider_trailers" />
 
         <include
             android:id="@+id/movie_reviews"
@@ -130,7 +148,7 @@
             android:layout_marginStart="@dimen/rating_bar_margin_left"
             android:layout_marginTop="@dimen/rating_bar_margin_top"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_trailers" />
+            app:layout_constraintTop_toBottomOf="@id/tv_reviews_title" />
 
         <View
             android:id="@+id/divider_rating"

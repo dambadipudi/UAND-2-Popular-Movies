@@ -3,7 +3,7 @@
     <!-- Dimensions used throughout the app -->
     <dimen name="margin">4dp</dimen>
 
-    <dimen name="network_error_margin">20dp</dimen>
+    <dimen name="network_error_margin">10dp</dimen>
 
     <dimen name="loading_size">48dp</dimen>
 
@@ -54,5 +54,7 @@
     <dimen name="trailers_margin_left">8dp</dimen>
 
     <dimen name="trailers_margin_right">8dp</dimen>
+
+    <dimen name="detail_title_margin">16dp</dimen>
 
 </resources>

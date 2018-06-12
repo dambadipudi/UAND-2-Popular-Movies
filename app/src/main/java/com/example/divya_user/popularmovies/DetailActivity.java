@@ -52,10 +52,17 @@ public class DetailActivity extends AppCompatActivity implements
 
         Intent intent = getIntent();
         if(intent.hasExtra(CLICKED_MOVIE_OBJECT)) {
-            Movie movie = intent.getParcelableExtra(CLICKED_MOVIE_OBJECT);
+            final Movie movie = intent.getParcelableExtra(CLICKED_MOVIE_OBJECT);
 
             updateActionBarTitle(movie.getTitle());
             populateMovieData(movie);
+
+            mMovieBinding.trailersError.tvRefresh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadTrailers(movie.getMovieId());
+                }
+            });
         }
     }
 

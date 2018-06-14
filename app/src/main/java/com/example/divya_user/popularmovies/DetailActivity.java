@@ -28,11 +28,11 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements
         TrailerAdapter.TrailerClickListener,
-        LoaderManager.LoaderCallbacks<List<String>>
-
-{
+        ReviewAdapter.ReviewClickListener {
 
     private static final int ID_TRAILER_LOADER = 100;
+
+    private static final int ID_REVIEW_LOADER = 110;
 
     private static final String CLICKED_MOVIE_OBJECT = "clicked_movie_object";
 
@@ -44,6 +44,11 @@ public class DetailActivity extends AppCompatActivity implements
 
     private TrailerAdapter mTrailerAdapter;
 
+    private RecyclerView mReviewRecyclerView;
+
+    private ReviewAdapter mReviewAdapter;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,16 +56,23 @@ public class DetailActivity extends AppCompatActivity implements
         mMovieBinding = DataBindingUtil.setContentView(this, R.layout.movie_detail_activity);
 
         Intent intent = getIntent();
-        if(intent.hasExtra(CLICKED_MOVIE_OBJECT)) {
+        if (intent.hasExtra(CLICKED_MOVIE_OBJECT)) {
             final Movie movie = intent.getParcelableExtra(CLICKED_MOVIE_OBJECT);
 
             updateActionBarTitle(movie.getTitle());
             populateMovieData(movie);
 
-            mMovieBinding.trailersError.tvRefresh.setOnClickListener(new View.OnClickListener() {
+            mMovieBinding.trailers.error.tvRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     loadTrailers(movie.getMovieId());
+                }
+            });
+
+            mMovieBinding.reviews.error.tvRefresh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadReviews(movie.getMovieId());
                 }
             });
         }
@@ -91,25 +103,25 @@ public class DetailActivity extends AppCompatActivity implements
         mMovieBinding.tvReleaseDate.setText(DateUtils.getDateAsFormattedString(movie.getReleaseDate(), "month_year"));
 
         //Set the user rating in the rating bar
-        mMovieBinding.movieReviews.ratingBar.setMax(10);
-        mMovieBinding.movieReviews.ratingBar.setStepSize(0.1f);
-        mMovieBinding.movieReviews.ratingBar.setRating((float) movie.getUserRating());
+        mMovieBinding.reviews.ratingBar.setMax(10);
+        mMovieBinding.reviews.ratingBar.setStepSize(0.1f);
+        mMovieBinding.reviews.ratingBar.setRating((float) movie.getUserRating());
 
         //Set the user rating text
-        mMovieBinding.movieReviews.tvUserRating.setText(Double.toString(movie.getUserRating()));
+        mMovieBinding.reviews.tvUserRating.setText(Double.toString(movie.getUserRating()));
 
         //Set the total user count
-        mMovieBinding.movieReviews.tvUserRatingCount.setText(Integer.toString(movie.getUserRatingCount()));
+        mMovieBinding.reviews.tvUserRatingCount.setText(Integer.toString(movie.getUserRatingCount()));
 
         //Set the plot synopsis
         mMovieBinding.tvPlotSynopsis.setText(movie.getPlotSynopsis());
 
         //Set the movie trailers
-        mTrailerRecyclerView = mMovieBinding.rvTrailers;
+        mTrailerRecyclerView = mMovieBinding.trailers.rvTrailers;
 
-        LinearLayoutManager layoutManager
+        LinearLayoutManager trailerLayoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mTrailerRecyclerView.setLayoutManager(layoutManager);
+        mTrailerRecyclerView.setLayoutManager(trailerLayoutManager);
 
         mTrailerRecyclerView.setHasFixedSize(true);
 
@@ -117,6 +129,20 @@ public class DetailActivity extends AppCompatActivity implements
         mTrailerRecyclerView.setAdapter(mTrailerAdapter);
 
         loadTrailers(movie.getMovieId());
+
+        //Set the movie reviews
+        mReviewRecyclerView = mMovieBinding.reviews.rvReviews;
+
+        LinearLayoutManager reviewLayoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mReviewRecyclerView.setLayoutManager(reviewLayoutManager);
+
+        mReviewRecyclerView.setHasFixedSize(true);
+
+        mReviewAdapter = new ReviewAdapter(this, this);
+        mReviewRecyclerView.setAdapter(mReviewAdapter);
+
+        loadReviews(movie.getMovieId());
 
     }
 
@@ -130,32 +156,65 @@ public class DetailActivity extends AppCompatActivity implements
         Bundle loaderBundle = new Bundle();
         loaderBundle.putLong(MOVIE_ID, movieId);
 
-        mMovieBinding.pbLoading.setVisibility(View.VISIBLE);
+        mMovieBinding.trailers.pbLoading.setVisibility(View.VISIBLE);
 
-        if(NetworkUtils.isOnline(this)) {
+        if (NetworkUtils.isOnline(this)) {
             showTrailerLayout();
             if (getSupportLoaderManager().getLoader(ID_TRAILER_LOADER) != null) {
-                getSupportLoaderManager().restartLoader(ID_TRAILER_LOADER, loaderBundle, this);
+                getSupportLoaderManager().restartLoader(ID_TRAILER_LOADER, loaderBundle, trailersLoaderListener);
             } else {
-                getSupportLoaderManager().initLoader(ID_TRAILER_LOADER, loaderBundle, this);
+                getSupportLoaderManager().initLoader(ID_TRAILER_LOADER, loaderBundle, trailersLoaderListener);
             }
         } else {
-            mMovieBinding.pbLoading.setVisibility(View.INVISIBLE);
-            showErrorLayout();
+            mMovieBinding.trailers.pbLoading.setVisibility(View.INVISIBLE);
+            showTrailerErrorLayout();
         }
     }
 
-    private void showErrorLayout() {
-        mMovieBinding.rvTrailers.setVisibility(View.INVISIBLE);
-        mMovieBinding.trailersError.rlErrorLayout.setVisibility(View.VISIBLE);
+    /**
+     * Creates a bundle for the loader and creates or restarts the loader to talk to the movieDB API
+     * in a background thread
+     *
+     * @param movieId This is the movieId for which to retrieve the reviews
+     */
+    private void loadReviews(long movieId) {
+        Bundle loaderBundle = new Bundle();
+        loaderBundle.putLong(MOVIE_ID, movieId);
+
+        mMovieBinding.reviews.pbLoading.setVisibility(View.VISIBLE);
+
+        if (NetworkUtils.isOnline(this)) {
+            showReviewLayout();
+            if (getSupportLoaderManager().getLoader(ID_REVIEW_LOADER) != null) {
+                getSupportLoaderManager().restartLoader(ID_REVIEW_LOADER, loaderBundle, reviewsLoaderListener);
+            } else {
+                getSupportLoaderManager().initLoader(ID_REVIEW_LOADER, loaderBundle, reviewsLoaderListener);
+            }
+        } else {
+            mMovieBinding.reviews.pbLoading.setVisibility(View.INVISIBLE);
+            showReviewErrorLayout();
+        }
     }
 
-    private void showTrailerLayout(){
-        mMovieBinding.trailersError.rlErrorLayout.setVisibility(View.INVISIBLE);
-        mMovieBinding.rvTrailers.setVisibility(View.VISIBLE);
+    private void showTrailerErrorLayout() {
+        mMovieBinding.trailers.rvTrailers.setVisibility(View.INVISIBLE);
+        mMovieBinding.trailers.error.rlErrorLayout.setVisibility(View.VISIBLE);
     }
 
+    private void showTrailerLayout() {
+        mMovieBinding.trailers.error.rlErrorLayout.setVisibility(View.INVISIBLE);
+        mMovieBinding.trailers.rvTrailers.setVisibility(View.VISIBLE);
+    }
 
+    private void showReviewErrorLayout() {
+        mMovieBinding.reviews.rvReviews.setVisibility(View.INVISIBLE);
+        mMovieBinding.reviews.error.rlErrorLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void showReviewLayout() {
+        mMovieBinding.reviews.error.rlErrorLayout.setVisibility(View.INVISIBLE);
+        mMovieBinding.reviews.rvReviews.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onTrailerClicked(String trailerKey) {
@@ -174,52 +233,118 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
-     /**
-     * Called when a new Loader needs to be
-     * created.
-     *
-     * @param loaderId The loader ID for which we need to create a loader
-     * @param bundle   Any arguments supplied by the caller
-     * @return A new Loader instance that is ready to start loading.
-     */
-    @NonNull
     @Override
-    public Loader<List<String>> onCreateLoader(int loaderId, @Nullable Bundle bundle) {
-        switch (loaderId) {
+    public void onReviewClicked(String reviewURL) {
 
-            case ID_TRAILER_LOADER:
-                if(bundle != null) {
-                    return new LoaderUtils.TrailersAsyncTaskLoader(bundle.getLong(MOVIE_ID), this);
-                }
-            default:
-                throw new RuntimeException("Loader Not Implemented: " + loaderId);
+        Uri reviewUri = Uri.parse(reviewURL);
+
+        Intent implicitIntent = new Intent(Intent.ACTION_VIEW, reviewUri);
+        if (implicitIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(implicitIntent);
         }
     }
 
-    /**
-     * Called when a Loader has finished loading its data.
-     *
-     * @param loader The Loader that has finished.
-     * @param trailerList   The data generated by the Loader.
-     */
-    @Override
-    public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> trailerList) {
-        mMovieBinding.pbLoading.setVisibility(View.INVISIBLE);
-        if(null == trailerList) {
-            Toast.makeText(this, "Oops", Toast.LENGTH_LONG).show();
-        } else {
-            mTrailerAdapter.setTrailerKeys(trailerList);
+    private LoaderManager.LoaderCallbacks<List<String>> trailersLoaderListener = new LoaderManager.LoaderCallbacks<List<String>>() {
+
+        /**
+         * Called when a new Loader needs to be
+         * created.
+         *
+         * @param loaderId The loader ID for which we need to create a loader
+         * @param bundle   Any arguments supplied by the caller
+         * @return A new Loader instance that is ready to start loading.
+         */
+        @NonNull
+        @Override
+        public Loader<List<String>> onCreateLoader(int loaderId, @Nullable Bundle bundle) {
+            switch (loaderId) {
+
+                case ID_TRAILER_LOADER:
+                    if (bundle != null) {
+                        return new LoaderUtils.TrailersAsyncTaskLoader(bundle.getLong(MOVIE_ID), DetailActivity.this);
+                    }
+                default:
+                    throw new RuntimeException("Loader Not Implemented: " + loaderId);
+            }
         }
-    }
 
-    /**
-     * Called when a previously created loader is being reset, and thus making its data unavailable.
-     * Removing reference to the Loader's data.
-     *
-     * @param loader The Loader that is being reset.
-     */
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<String>> loader) {
+        /**
+         * Called when a Loader has finished loading its data.
+         *
+         * @param loader The Loader that has finished.
+         * @param trailerList   The data generated by the Loader.
+         */
+        @Override
+        public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> trailerList) {
+            mMovieBinding.trailers.pbLoading.setVisibility(View.INVISIBLE);
+            if (null == trailerList) {
+                Toast.makeText(DetailActivity.this, "Oops", Toast.LENGTH_LONG).show();
+            } else {
+                mTrailerAdapter.setTrailerKeys(trailerList);
+            }
+        }
 
-    }
+        /**
+         * Called when a previously created loader is being reset, and thus making its data unavailable.
+         * Removing reference to the Loader's data.
+         *
+         * @param loader The Loader that is being reset.
+         */
+        @Override
+        public void onLoaderReset(@NonNull Loader<List<String>> loader) {
+
+        }
+    };
+
+    private LoaderManager.LoaderCallbacks<List<Movie.Review>> reviewsLoaderListener = new LoaderManager.LoaderCallbacks<List<Movie.Review>>() {
+
+        /**
+         * Called when a new Loader needs to be
+         * created.
+         *
+         * @param loaderId The loader ID for which we need to create a loader
+         * @param bundle   Any arguments supplied by the caller
+         * @return A new Loader instance that is ready to start loading.
+         */
+        @NonNull
+        @Override
+        public Loader<List<Movie.Review>> onCreateLoader(int loaderId, @Nullable Bundle bundle) {
+            switch (loaderId) {
+
+                case ID_REVIEW_LOADER:
+                    if (bundle != null) {
+                        return new LoaderUtils.ReviewsAsyncTaskLoader(bundle.getLong(MOVIE_ID), DetailActivity.this);
+                    }
+                default:
+                    throw new RuntimeException("Loader Not Implemented: " + loaderId);
+            }
+        }
+
+        /**
+         * Called when a Loader has finished loading its data.
+         *
+         * @param loader The Loader that has finished.
+         * @param reviewsList   The data generated by the Loader.
+         */
+        @Override
+        public void onLoadFinished(@NonNull Loader<List<Movie.Review>> loader, List<Movie.Review> reviewsList) {
+            mMovieBinding.reviews.pbLoading.setVisibility(View.INVISIBLE);
+            if (null == reviewsList) {
+                Toast.makeText(DetailActivity.this, "Oops", Toast.LENGTH_LONG).show();
+            } else {
+                mReviewAdapter.setReviews(reviewsList);
+            }
+        }
+
+        /**
+         * Called when a previously created loader is being reset, and thus making its data unavailable.
+         * Removing reference to the Loader's data.
+         *
+         * @param loader The Loader that is being reset.
+         */
+        @Override
+        public void onLoaderReset(@NonNull Loader<List<Movie.Review>> loader) {
+
+        }
+    };
 }

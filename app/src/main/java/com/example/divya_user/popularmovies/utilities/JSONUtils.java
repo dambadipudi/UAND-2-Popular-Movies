@@ -39,6 +39,13 @@ public class JSONUtils {
 
     private final static String KEY = "key";
 
+    private final static String AUTHOR = "author";
+
+    private final static String CONTENT = "content";
+
+    private final static String URL = "url";
+
+
     public static int getTotalPages(String jsonString) {
         try {
             JSONObject movieJSONObject = new JSONObject(jsonString);
@@ -98,6 +105,33 @@ public class JSONUtils {
             }
 
             return trailerYoutubeKeysList;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static List<Movie.Review> getListOfReviewsFromJSON(String jsonString) {
+        try {
+            JSONObject reviewsJSONObject = new JSONObject(jsonString);
+
+            JSONArray resultsJSONArray = reviewsJSONObject.getJSONArray(RESULTS);
+
+            List<Movie.Review> reviewsList = new ArrayList<>();
+
+            for(int index = 0; index < resultsJSONArray.length(); index++) {
+
+                JSONObject reviewJSONObject = resultsJSONArray.getJSONObject(index);
+                Movie.Review review = new Movie.Review(reviewJSONObject.getString(AUTHOR),
+                                                        reviewJSONObject.getString(CONTENT),
+                                                        reviewJSONObject.getString(URL));
+
+                reviewsList.add(review);
+            }
+
+            return reviewsList;
 
         } catch (JSONException e) {
             e.printStackTrace();

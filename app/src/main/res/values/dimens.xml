@@ -57,4 +57,12 @@
 
     <dimen name="detail_title_margin">16dp</dimen>
 
+    <dimen name="reviews_layout_height">400dp</dimen>
+
+    <dimen name="review_content_margin">16dp</dimen>
+
+    <dimen name="reviews_margin_left">16dp</dimen>
+
+    <dimen name="reviews_margin_right">16dp</dimen>
+
 </resources>

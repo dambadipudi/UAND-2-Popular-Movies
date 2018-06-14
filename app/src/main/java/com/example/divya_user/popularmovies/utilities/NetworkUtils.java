@@ -37,8 +37,11 @@ public class NetworkUtils {
     //the movie/popular endpoint in order to sort the movies by most popular
     private static final String POPULAR_PATH = "popular";
 
-    //the movie/top_rated endpoint in order to retrieve the trailers
+    //the videos endpoint in order to retrieve the trailers
     private static final String TRAILERS_PATH = "videos";
+
+    //the reviews endpoint in order to retrieve the reviews
+    private static final String REVIEWS_PATH = "reviews";
 
     //The API_Key that is required to talk to the movie DB API
     private static final String API_KEY_PARAM = "api_key";
@@ -91,6 +94,25 @@ public class NetworkUtils {
 
         return new URL(movieDBUri.toString());
     }
+
+    /**
+     * Builds the URL used to talk to the movie DB API to retrieve the reviews. It builds the URL based on the
+     * movieId
+     *
+     * @param movieId The movie ID for which to retrieve the reviews
+     * @return The URL to use to query the movie DB API for reviews
+     */
+    public static URL getReviewsURL(long movieId) throws MalformedURLException {
+
+        Uri movieDBUri = Uri.parse(BASE_URL).buildUpon()
+                .appendPath(Long.toString(movieId))
+                .appendPath(REVIEWS_PATH)
+                .appendQueryParameter(API_KEY_PARAM, BuildConfig.API_KEY)
+                .build();
+
+        return new URL(movieDBUri.toString());
+    }
+
 
     /**
      * This method returns the entire result from the HTTP response.

@@ -139,4 +139,66 @@ public class LoaderUtils {
         }
 
     }
+
+    /**
+     * Loader class to make the network call to the movie DB API to retrieve reviews
+     */
+    public static class ReviewsAsyncTaskLoader extends AsyncTaskLoader<List<Movie.Review>> {
+
+
+        List<Movie.Review> cachedReviewList;
+        long mMovieId;
+
+        public ReviewsAsyncTaskLoader(long movieId, @NonNull Context context) {
+            super(context);
+            mMovieId = movieId;
+        }
+
+        @Override
+        protected void onStartLoading() {
+            if (cachedReviewList != null) {
+                //To skip loadInBackground call
+                deliverResult(cachedReviewList);
+            }else{
+                forceLoad();
+            }
+        }
+
+        /**
+         * Called when a load is forced
+         *
+         * @return A List of Movie.Review objects created from the JSON Response
+         * obtained from network call to movie DB API
+         */
+        @Nullable
+        @Override
+        public List<Movie.Review> loadInBackground() {
+            try {
+                URL reviewURL = NetworkUtils.getReviewsURL(mMovieId);
+
+                String reviewJSON;
+
+                if(reviewURL != null) {
+                    reviewJSON = NetworkUtils.getResponseFromHttpUrl(reviewURL);
+                    if(reviewJSON != null) {
+                        return JSONUtils.getListOfReviewsFromJSON(reviewJSON);
+                    }
+                }
+                return null;
+            } catch(MalformedURLException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        public void deliverResult(List<Movie.Review> data) {
+            cachedReviewList = data;
+            super.deliverResult(data);
+        }
+
+    }
 }

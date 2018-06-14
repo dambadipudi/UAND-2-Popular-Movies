@@ -19,7 +19,6 @@
             android:id="@+id/tv_user_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/user_rating_margin_left"
             android:layout_marginStart="@dimen/user_rating_margin_left"
             app:layout_constraintStart_toEndOf="@id/rating_bar"
             app:layout_constraintTop_toBottomOf="@id/rating_bar"
@@ -29,7 +28,6 @@
             android:id="@+id/tv_total_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/total_rating_margin_left"
             android:layout_marginStart="@dimen/total_rating_margin_left"
             app:layout_constraintStart_toEndOf="@id/tv_user_rating"
             app:layout_constraintBottom_toBottomOf="@id/tv_user_rating"
@@ -39,7 +37,6 @@
             android:id="@+id/tv_user_rating_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/user_rating_count_margin_left"
             android:layout_marginStart="@dimen/user_rating_count_margin_left"
             app:layout_constraintStart_toEndOf="@id/tv_total_rating"
             app:layout_constraintTop_toBottomOf="@id/rating_bar"
@@ -49,11 +46,36 @@
             android:id="@+id/tv_count_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/count_label_margin_left"
             android:layout_marginStart="@dimen/count_label_margin_left"
             app:layout_constraintStart_toEndOf="@id/tv_user_rating_count"
             app:layout_constraintBottom_toBottomOf="@id/tv_user_rating_count"
             android:text="@string/count_label"/>
+
+        <FrameLayout
+            android:layout_height="@dimen/reviews_layout_height"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/review_content_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rating_bar">
+
+            <include
+                android:id="@+id/error"
+                layout="@layout/network_error_layout" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_reviews"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin" />
+
+            <ProgressBar
+                android:id="@+id/pb_loading"
+                android:layout_width="@dimen/loading_size"
+                android:layout_height="@dimen/loading_size"
+                android:layout_gravity="center"
+                android:visibility="visible" />
+        </FrameLayout>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

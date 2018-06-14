@@ -36,4 +36,6 @@
 
     <string name="reviews_title">Reviews</string>
 
+    <string name="review_author_label">By</string>
+
 </resources>

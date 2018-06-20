@@ -1,5 +1,8 @@
-package com.example.divya_user.popularmovies.model;
+package com.example.divya_user.popularmovies.data.Room.Entity;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,10 +10,14 @@ import android.os.Parcelable;
  *
  * This class contains the Movie object that we obtain from the Movie DB API
  *
+ * This is also the Entity class for Room acting as the database ORM
+ *
  */
 
+@Entity(tableName = "favorite_movie")
 public class Movie implements Parcelable{
 
+    @PrimaryKey
     private long movieId;
 
     private String title;
@@ -37,7 +44,7 @@ public class Movie implements Parcelable{
                  String plotSynopsis,
                  double userRating,
                  int userRatingCount,
-                 String releasedDate) {
+                 String releaseDate) {
         this.movieId = movieId;
         this.title = title;
         this.originalTitle = originalTitle;
@@ -46,9 +53,10 @@ public class Movie implements Parcelable{
         this.plotSynopsis = plotSynopsis;
         this.userRating = userRating;
         this.userRatingCount = userRatingCount;
-        this.releaseDate = releasedDate;
+        this.releaseDate = releaseDate;
     }
 
+    @Ignore
     private Movie(Parcel in) {
         movieId = in.readLong();
         title = in.readString();

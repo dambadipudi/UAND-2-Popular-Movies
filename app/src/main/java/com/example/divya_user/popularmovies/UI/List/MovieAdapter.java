@@ -1,4 +1,4 @@
-package com.example.divya_user.popularmovies;
+package com.example.divya_user.popularmovies.UI.List;
 
 
 import android.content.Context;
@@ -10,9 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.divya_user.popularmovies.model.Movie;
+import com.example.divya_user.popularmovies.R;
+import com.example.divya_user.popularmovies.data.Room.Entity.Movie;
 import com.example.divya_user.popularmovies.utilities.DateUtils;
-import com.example.divya_user.popularmovies.utilities.NetworkUtils;
+import com.example.divya_user.popularmovies.data.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

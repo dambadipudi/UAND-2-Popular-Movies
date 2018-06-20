@@ -1,4 +1,4 @@
-package com.example.divya_user.popularmovies.utilities;
+package com.example.divya_user.popularmovies.data;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

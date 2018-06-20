@@ -10,13 +10,17 @@
     <string-array name="spinner_labels">
         <item>Most Popular</item>
         <item>Top Rated</item>
+        <item>Favorites</item>
     </string-array>
 
     <string-array name="spinner_keys"
                     translatable="false">
         <item>popular</item>
         <item>top_rated</item>
+        <item>favorites</item>
     </string-array>
+
+    <string name="favorite_spinner_key">favorites</string>
 
     <string name="movie_backdrop_content_description">Movie Backdrop</string>
 

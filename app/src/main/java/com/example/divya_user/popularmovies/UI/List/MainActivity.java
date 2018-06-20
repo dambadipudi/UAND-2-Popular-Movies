@@ -1,5 +1,6 @@
 package com.example.divya_user.popularmovies.UI.List;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -151,21 +153,36 @@ public class MainActivity extends AppCompatActivity implements
      * @param sortByKey This is the key for the Sort By Label selected in the spinner
      */
     private void loadMovieData(String sortByKey) {
-        Bundle loaderBundle = new Bundle();
-        loaderBundle.putString(SORT_BY_KEY, sortByKey);
 
-        mLoading.setVisibility(View.VISIBLE);
+        //If the sort by category is 'Favorites' then get the data from the local database
+        //Or else restart the loader to get the information from the API
+        if(sortByKey.equals(getString(R.string.favorite_spinner_key))) {
+            mLoading.setVisibility(View.VISIBLE);
+            MainActivityViewModel mainActivityViewModel = ViewModelProviders
+                                                            .of(this)
+                                                            .get(MainActivityViewModel.class);
+            mainActivityViewModel.getFavoriteMovies().observe(this, favoriteMovies -> {
+                mMovieAdapter.setMovieData(favoriteMovies);
+                mLoading.setVisibility(View.INVISIBLE);
+            });
 
-        if(NetworkUtils.isOnline(this)) {
-            showMovieLayout();
-            if (getSupportLoaderManager().getLoader(ID_MOVIE_LOADER) != null) {
-                getSupportLoaderManager().restartLoader(ID_MOVIE_LOADER, loaderBundle, this);
-            } else {
-                getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, loaderBundle, this);
-            }
         } else {
-            mLoading.setVisibility(View.INVISIBLE);
-            showErrorLayout();
+            Bundle loaderBundle = new Bundle();
+            loaderBundle.putString(SORT_BY_KEY, sortByKey);
+
+            mLoading.setVisibility(View.VISIBLE);
+
+            if (NetworkUtils.isOnline(this)) {
+                showMovieLayout();
+                if (getSupportLoaderManager().getLoader(ID_MOVIE_LOADER) != null) {
+                    getSupportLoaderManager().restartLoader(ID_MOVIE_LOADER, loaderBundle, this);
+                } else {
+                    getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, loaderBundle, this);
+                }
+            } else {
+                mLoading.setVisibility(View.INVISIBLE);
+                showErrorLayout();
+            }
         }
     }
 

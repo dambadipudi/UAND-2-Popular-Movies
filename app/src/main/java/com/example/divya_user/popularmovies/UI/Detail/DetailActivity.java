@@ -1,4 +1,4 @@
-package com.example.divya_user.popularmovies;
+package com.example.divya_user.popularmovies.UI.Detail;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -14,16 +14,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.divya_user.popularmovies.R;
 import com.example.divya_user.popularmovies.databinding.MovieDetailActivityBinding;
-import com.example.divya_user.popularmovies.model.Movie;
+import com.example.divya_user.popularmovies.data.Room.Entity.Movie;
 import com.example.divya_user.popularmovies.utilities.DateUtils;
 import com.example.divya_user.popularmovies.utilities.LoaderUtils;
-import com.example.divya_user.popularmovies.utilities.NetworkUtils;
+import com.example.divya_user.popularmovies.data.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements

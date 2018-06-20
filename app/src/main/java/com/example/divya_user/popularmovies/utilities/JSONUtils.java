@@ -1,6 +1,6 @@
 package com.example.divya_user.popularmovies.utilities;
 
-import com.example.divya_user.popularmovies.model.Movie;
+import com.example.divya_user.popularmovies.data.Room.Entity.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;

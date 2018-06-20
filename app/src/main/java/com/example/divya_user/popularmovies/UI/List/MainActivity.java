@@ -1,12 +1,10 @@
-package com.example.divya_user.popularmovies;
+package com.example.divya_user.popularmovies.UI.List;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,14 +20,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.divya_user.popularmovies.model.Movie;
-import com.example.divya_user.popularmovies.utilities.JSONUtils;
+import com.example.divya_user.popularmovies.R;
+import com.example.divya_user.popularmovies.UI.Detail.DetailActivity;
+import com.example.divya_user.popularmovies.data.Room.Entity.Movie;
 import com.example.divya_user.popularmovies.utilities.LoaderUtils;
-import com.example.divya_user.popularmovies.utilities.NetworkUtils;
+import com.example.divya_user.popularmovies.data.NetworkUtils;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 

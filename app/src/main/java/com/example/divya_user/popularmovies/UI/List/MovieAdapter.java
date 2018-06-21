@@ -1,9 +1,14 @@
 package com.example.divya_user.popularmovies.UI.List;
 
 
+import android.app.Activity;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,6 +85,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                 .error(R.drawable.ic_error)
                 .into(movieAdapterViewHolder.mPosterImageView);
 
+        MainActivityViewModel mainActivityViewModel = ViewModelProviders
+                                                        .of((FragmentActivity) mContext)
+                                                        .get(MainActivityViewModel.class);
+
+        mainActivityViewModel.isFavoriteMovie(currentMovie.getMovieId()).observe((LifecycleOwner) mContext, isFavorite -> {
+            if(isFavorite == 1) {
+                movieAdapterViewHolder.mFavoriteImage.setImageResource(R.drawable.ic_favorite_selected);
+            } else if(isFavorite == 0) {
+                movieAdapterViewHolder.mFavoriteImage.setImageResource(R.drawable.ic_favorite);
+            }
+        });
+
         movieAdapterViewHolder.mTitle.setText(currentMovie.getTitle());
         movieAdapterViewHolder.mReleaseYear.setText(DateUtils.getDateAsFormattedString(currentMovie.getReleaseDate(), "year"));
     }
@@ -101,6 +118,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         final ImageView mPosterImageView;
         final TextView mTitle;
         final TextView mReleaseYear;
+        final ImageView mFavoriteImage;
 
         /**
          *  Constructor to initialise the layout elements
@@ -112,6 +130,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             mPosterImageView = view.findViewById(R.id.iv_movie_poster);
             mTitle = view.findViewById(R.id.tv_title);
             mReleaseYear =  view.findViewById(R.id.tv_release_year);
+            mFavoriteImage = view.findViewById(R.id.iv_favorite);
             itemView.setOnClickListener(this);
         }
 

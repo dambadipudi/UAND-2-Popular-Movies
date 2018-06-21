@@ -21,11 +21,20 @@
             android:scaleType="centerCrop"
             android:contentDescription="@string/movie_backdrop_content_description" />
 
-        <ImageView
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favorite"
+            android:layout_marginEnd="@dimen/favorite_button_margin"
+            app:layout_constraintTop_toBottomOf="@id/iv_backdrop_poster"
+            app:layout_constraintBottom_toBottomOf="@id/iv_backdrop_poster"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
             android:id="@+id/iv_movie_poster"
             android:layout_height="wrap_content"
             android:layout_width="@dimen/empty_dimen"
-            android:layout_marginLeft="@dimen/poster_margin"
             android:layout_marginStart="@dimen/poster_margin"
             android:adjustViewBounds="true"
             android:contentDescription="@string/movie_poster_content_description"

@@ -13,6 +13,8 @@
 
     <dimen name="empty_dimen">0dp</dimen>
 
+    <dimen name="favorite_button_margin">16dp</dimen>
+
     <dimen name="poster_margin">16dp</dimen>
 
     <dimen name="poster_vertical_bias">0.05</dimen>

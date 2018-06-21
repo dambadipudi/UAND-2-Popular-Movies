@@ -11,7 +11,10 @@ import java.util.List;
 @Dao
 public interface MovieDAO {
 
-    @Query("SELECT * from favorite_movie")
+    @Query("SELECT * FROM favorite_movie")
     LiveData<List<Movie>> getFavoriteMovies();
+
+    @Query("SELECT EXISTS(SELECT * FROM favorite_movie WHERE movieId = :movieId)")
+    LiveData<Integer> isFavoriteMovie(long movieId);
 
 }

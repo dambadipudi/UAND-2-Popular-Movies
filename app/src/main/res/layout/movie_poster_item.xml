@@ -39,6 +39,16 @@
             android:layout_marginBottom="@dimen/margin"
             android:layout_below="@id/tv_title" />
 
+        <ImageView
+            android:id="@+id/iv_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favorite_selected"
+            android:layout_marginEnd="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true" />
+
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

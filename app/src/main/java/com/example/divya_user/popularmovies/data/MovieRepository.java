@@ -32,4 +32,8 @@ public class MovieRepository {
     public LiveData<List<Movie>> getFavoriteMovies() {
         return mMovieDAO.getFavoriteMovies();
     }
+
+    public LiveData<Integer> isFavoriteMovie(long movieId) {
+        return mMovieDAO.isFavoriteMovie(movieId);
+    }
 }

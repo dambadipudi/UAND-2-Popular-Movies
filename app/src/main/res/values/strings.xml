@@ -22,6 +22,10 @@
 
     <string name="favorite_spinner_key">favorites</string>
 
+    <string name="state_is_favorite">is_favorite</string>
+
+    <string name="state_not_favorite">not_favorite</string>
+
     <string name="movie_backdrop_content_description">Movie Backdrop</string>
 
     <string name="movie_poster_content_description">Movie Poster</string>

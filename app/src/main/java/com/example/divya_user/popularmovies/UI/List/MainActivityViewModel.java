@@ -13,7 +13,6 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     private MovieRepository mMovieRepository;
     private LiveData<List<Movie>> mFavoriteMovies;
-    private LiveData<Integer> mIsFavoriteMovie;
 
     public MainActivityViewModel(Application application) {
         super(application);
@@ -26,9 +25,6 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
     public LiveData<Integer> isFavoriteMovie(long movieId) {
-        if(mIsFavoriteMovie == null) {
-            mIsFavoriteMovie = mMovieRepository.isFavoriteMovie(movieId);
-        }
-        return mIsFavoriteMovie;
+           return mMovieRepository.isFavoriteMovie(movieId);
     }
 }

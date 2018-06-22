@@ -1,16 +1,21 @@
 package com.example.divya_user.popularmovies.UI.Detail;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -61,19 +66,15 @@ public class DetailActivity extends AppCompatActivity implements
             updateActionBarTitle(movie.getTitle());
             populateMovieData(movie);
 
-            mMovieBinding.trailers.error.tvRefresh.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    loadTrailers(movie.getMovieId());
-                }
-            });
+            mMovieBinding.trailers.error.tvRefresh.setOnClickListener((View view) ->
+                    loadTrailers(movie.getMovieId())
+            );
 
-            mMovieBinding.reviews.error.tvRefresh.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    loadReviews(movie.getMovieId());
-                }
-            });
+            mMovieBinding.reviews.error.tvRefresh.setOnClickListener((View view) ->
+                    loadReviews(movie.getMovieId())
+            );
+
+
         }
     }
 
@@ -94,6 +95,8 @@ public class DetailActivity extends AppCompatActivity implements
                 .placeholder(R.drawable.ic_movie)
                 .error(R.drawable.ic_error)
                 .into(mMovieBinding.ivMoviePoster);
+
+        setupFavoriteButton(movie);
 
         //Set the original title
         mMovieBinding.tvOriginalTitle.setText(movie.getOriginalTitle());
@@ -145,11 +148,36 @@ public class DetailActivity extends AppCompatActivity implements
 
     }
 
+    private void setupFavoriteButton(Movie movie) {
+        DetailActivityViewModel detailActivityViewModel = ViewModelProviders
+                .of(this)
+                .get(DetailActivityViewModel.class);
+
+        FloatingActionButton fabFavoriteButton = mMovieBinding.fabFavorite;
+
+        detailActivityViewModel.isFavoriteMovie(movie.getMovieId()).observe(this, isFavorite -> {
+            if(isFavorite == 1) {
+                fabFavoriteButton.setImageResource(R.drawable.ic_favorite_selected);
+                fabFavoriteButton.setTag(R.string.state_is_favorite);
+            } else if(isFavorite == 0) {
+                fabFavoriteButton.setImageResource(R.drawable.ic_favorite);
+                fabFavoriteButton.setTag(R.string.state_not_favorite);
+            }
+        });
+
+        fabFavoriteButton.setOnClickListener((View view) -> {
+            if (fabFavoriteButton.getTag().equals(R.string.state_not_favorite)) {
+                detailActivityViewModel.saveFavoriteMovie(movie);
+            } else if(fabFavoriteButton.getTag().equals(R.string.state_is_favorite)) {
+                detailActivityViewModel.removeFavoriteMovie(movie);
+            }
+
+        });
+    }
+
     /**
      * Creates a bundle for the loader and creates or restarts the loader to talk to the movieDB API
      * in a background thread
-     *
-     * @param movieId This is the movieId for which to retrieve the trailers
      */
     private void loadTrailers(long movieId) {
         Bundle loaderBundle = new Bundle();
@@ -174,7 +202,6 @@ public class DetailActivity extends AppCompatActivity implements
      * Creates a bundle for the loader and creates or restarts the loader to talk to the movieDB API
      * in a background thread
      *
-     * @param movieId This is the movieId for which to retrieve the reviews
      */
     private void loadReviews(long movieId) {
         Bundle loaderBundle = new Bundle();

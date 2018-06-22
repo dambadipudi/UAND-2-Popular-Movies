@@ -2,6 +2,7 @@ package com.example.divya_user.popularmovies.data;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.os.AsyncTask;
 
 import com.example.divya_user.popularmovies.data.Room.DAO.MovieDAO;
 import com.example.divya_user.popularmovies.data.Room.DB.AppDatabase;
@@ -35,5 +36,49 @@ public class MovieRepository {
 
     public LiveData<Integer> isFavoriteMovie(long movieId) {
         return mMovieDAO.isFavoriteMovie(movieId);
+    }
+
+    public void saveFavoriteMovie(Movie movie) {
+        new SaveFavoriteMovieAsyncTask(mMovieDAO).execute(movie);
+    }
+
+    /**
+     * Inner AsyncTask subclass to insert a single Movie object into Room db favorite_movie table
+     *
+     */
+    private static class SaveFavoriteMovieAsyncTask extends AsyncTask<Movie, Void, Void> {
+        private MovieDAO movieDAO;
+
+        SaveFavoriteMovieAsyncTask(MovieDAO dao) {
+            this.movieDAO = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Movie... movie) {
+            movieDAO.saveFavoriteMovie(movie[0]);
+            return null;
+        }
+    }
+
+    public void removeFavoriteMovie(Movie movie) {
+        new RemoveFavoriteMovieAsyncTask(mMovieDAO).execute(movie);
+    }
+
+    /**
+     * Inner AsyncTask subclass to insert a single Movie object into Room db favorite_movie table
+     *
+     */
+    private static class RemoveFavoriteMovieAsyncTask extends AsyncTask<Movie, Void, Void> {
+        private MovieDAO movieDAO;
+
+        RemoveFavoriteMovieAsyncTask(MovieDAO dao) {
+            this.movieDAO = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Movie... movie) {
+            movieDAO.removeFavoriteMovie(movie[0]);
+            return null;
+        }
     }
 }

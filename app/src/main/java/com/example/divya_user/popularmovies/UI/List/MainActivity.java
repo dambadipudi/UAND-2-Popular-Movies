@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,13 +45,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String SORT_BY_KEY = "sort_by";
 
-    private static final String DEFAULT_SORT_BY = "popular";
-
-    private static final String SORT_BY_POSITION_STATE = "sort_by_position_state";
-
     private static final String RECYCLER_VIEW_STATE = "recycler_view_state";
-
-    private static Parcelable mRecyclerViewState;
 
     private static final String CLICKED_MOVIE_OBJECT = "clicked_movie_object";
 
@@ -71,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private LinearLayout mMovieLayout;
 
+    private static Parcelable mRecyclerViewState;
+
     // The page number from which data is returned by movieDB API
     private static int pageNumber = 1;
 
@@ -81,27 +76,22 @@ public class MainActivity extends AppCompatActivity implements
 
         mSortBySpinner = findViewById(R.id.spinner_sort_by);
         mSortBySpinner.setOnItemSelectedListener(this);
-        mSortBySpinner.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+        mSortBySpinner.setOnTouchListener((View v, MotionEvent event) -> {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     spinnerTouched = true;
+                    v.performClick();
                 }
 
                 return false;
-            }
         });
 
         mRecyclerView = findViewById(R.id.rv_movies);
 
-        mRefreshButton =findViewById(R.id.tv_refresh);
-        mRefreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int spinnerPosition = mSortBySpinner.getSelectedItemPosition();
-                loadMovieData(getSortByKeyFromPosition(spinnerPosition));
-            }
+        mRefreshButton = findViewById(R.id.tv_refresh);
+        mRefreshButton.setOnClickListener((View view) -> {
+            int spinnerPosition = mSortBySpinner.getSelectedItemPosition();
+            loadMovieData(getSortByKeyFromPosition(spinnerPosition));
         });
 
         mLoading = findViewById(R.id.pb_loading);
@@ -121,20 +111,14 @@ public class MainActivity extends AppCompatActivity implements
         mMovieAdapter = new MovieAdapter(this, this);
         mRecyclerView.setAdapter(mMovieAdapter);
 
-        String sortByKey = DEFAULT_SORT_BY;
+    }
 
-        if(savedInstanceState != null) {
-            if(savedInstanceState.containsKey(SORT_BY_POSITION_STATE)) {
-                int spinnerPosition = savedInstanceState.getInt(SORT_BY_POSITION_STATE);
-                mSortBySpinner.setSelection(spinnerPosition);
-                sortByKey = getSortByKeyFromPosition(spinnerPosition);
-            }
-            if(savedInstanceState.containsKey(RECYCLER_VIEW_STATE)) {
-                mRecyclerViewState = savedInstanceState.getParcelable(RECYCLER_VIEW_STATE);
-            }
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        loadMovieData(sortByKey);
+        int spinnerPosition = mSortBySpinner.getSelectedItemPosition();
+        loadMovieData(getSortByKeyFromPosition(spinnerPosition));
     }
 
     /**
@@ -153,20 +137,25 @@ public class MainActivity extends AppCompatActivity implements
      * @param sortByKey This is the key for the Sort By Label selected in the spinner
      */
     private void loadMovieData(String sortByKey) {
-
         //If the sort by category is 'Favorites' then get the data from the local database
         //Or else restart the loader to get the information from the API
-        if(sortByKey.equals(getString(R.string.favorite_spinner_key))) {
-            mLoading.setVisibility(View.VISIBLE);
-            MainActivityViewModel mainActivityViewModel = ViewModelProviders
-                                                            .of(this)
-                                                            .get(MainActivityViewModel.class);
-            mainActivityViewModel.getFavoriteMovies().observe(this, favoriteMovies -> {
-                mMovieAdapter.setMovieData(favoriteMovies);
+        MainActivityViewModel mainActivityViewModel = ViewModelProviders
+                .of(this)
+                .get(MainActivityViewModel.class);
+        mainActivityViewModel.getFavoriteMovies().observe(this, favoriteMovies -> {
+            if(sortByKey.equals(getString(R.string.favorite_spinner_key))) {
+                showMovieLayout();
                 mLoading.setVisibility(View.INVISIBLE);
-            });
+                mMovieAdapter.setMovieData(favoriteMovies);
 
-        } else {
+                if (mRecyclerViewState != null) {
+                    mRecyclerView.getLayoutManager().onRestoreInstanceState(mRecyclerViewState);
+                }
+            }
+        });
+
+
+        if(!sortByKey.equals(getString(R.string.favorite_spinner_key))) {
             Bundle loaderBundle = new Bundle();
             loaderBundle.putString(SORT_BY_KEY, sortByKey);
 
@@ -289,17 +278,30 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * Called when to save the state of the spinner and the RecyclerView in order for it to be restored
+     * This method is called before starting another activity and also for orientation change
+     * This saves the state of the Posters RecyclerView in order for it to be restored
      * when we come back to the activity
      *
      * @param outState The bundle in which to save the state
      */
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putInt(SORT_BY_POSITION_STATE, mSortBySpinner.getSelectedItemPosition());
+        mRecyclerViewState = null;
         outState.putParcelable(RECYCLER_VIEW_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
+    }
+
+
+    /**
+     * This method is called for orientation changes
+     * This retrieves the state of the Posters RecyclerView in order
+     * when we come back to the activity
+     *
+     * @param inState The bundle from which to retrieve the state
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle inState) {
+        super.onRestoreInstanceState(inState);
+        mRecyclerViewState = inState.getParcelable(RECYCLER_VIEW_STATE);
     }
 }

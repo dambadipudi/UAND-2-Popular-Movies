@@ -6,17 +6,17 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.divya_user.popularmovies.R;
@@ -40,9 +40,13 @@ public class DetailActivity extends AppCompatActivity implements
 
     private static final String CLICKED_MOVIE_OBJECT = "clicked_movie_object";
 
+    private static final String DETAIL_SCROLL_POSITION = "detail_scroll_position";
+
     private static final String MOVIE_ID = "MOVIE_ID";
 
     private MovieDetailActivityBinding mMovieBinding;
+
+    private ScrollView mScrollView;
 
     private RecyclerView mTrailerRecyclerView;
 
@@ -52,6 +56,15 @@ public class DetailActivity extends AppCompatActivity implements
 
     private ReviewAdapter mReviewAdapter;
 
+    private static final String REVIEWS_STATE = "reviews_state";
+
+    private static final String TRAILERS_STATE = "trailers_state";
+
+    private static Parcelable mReviewsRecyclerViewState;
+
+    private static Parcelable mTrailersRecyclerViewState;
+
+    private int[] mScrollPosition = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,10 +72,15 @@ public class DetailActivity extends AppCompatActivity implements
 
         mMovieBinding = DataBindingUtil.setContentView(this, R.layout.movie_detail_activity);
 
+        mScrollView = findViewById(R.id.scrollview);
+
         Intent intent = getIntent();
         if (intent.hasExtra(CLICKED_MOVIE_OBJECT)) {
             final Movie movie = intent.getParcelableExtra(CLICKED_MOVIE_OBJECT);
 
+            mScrollView.smoothScrollTo(0,0);
+            mReviewsRecyclerViewState = null;
+            mTrailersRecyclerViewState = null;
             updateActionBarTitle(movie.getTitle());
             populateMovieData(movie);
 
@@ -76,6 +94,16 @@ public class DetailActivity extends AppCompatActivity implements
 
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(mScrollPosition != null) {
+            mScrollView.smoothScrollTo(mScrollPosition[0], mScrollPosition[1]);
+        }
+
     }
 
     private void updateActionBarTitle(String title) {
@@ -307,6 +335,9 @@ public class DetailActivity extends AppCompatActivity implements
                 Toast.makeText(DetailActivity.this, "Oops", Toast.LENGTH_LONG).show();
             } else {
                 mTrailerAdapter.setTrailerKeys(trailerList);
+                if(mTrailersRecyclerViewState != null) {
+                    mTrailerRecyclerView.getLayoutManager().onRestoreInstanceState(mTrailersRecyclerViewState);
+                }
             }
         }
 
@@ -359,6 +390,9 @@ public class DetailActivity extends AppCompatActivity implements
                 Toast.makeText(DetailActivity.this, "Oops", Toast.LENGTH_LONG).show();
             } else {
                 mReviewAdapter.setReviews(reviewsList);
+                if(mReviewsRecyclerViewState != null) {
+                    mReviewRecyclerView.getLayoutManager().onRestoreInstanceState(mReviewsRecyclerViewState);
+                }
             }
         }
 
@@ -373,4 +407,42 @@ public class DetailActivity extends AppCompatActivity implements
 
         }
     };
+
+    /**
+     * This method is called before starting another activity and also for orientation change
+     * This saves the state of the Reviews and Trailers RecyclerView in order for them to be retrieved
+     * when we come back to the activity
+     *
+     * @param outState The bundle in which to save the state
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mReviewsRecyclerViewState = null;
+        mTrailersRecyclerViewState = null;
+        mScrollPosition = null;
+        outState.putParcelable(REVIEWS_STATE, mReviewRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(TRAILERS_STATE, mTrailerRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putIntArray(DETAIL_SCROLL_POSITION,
+                new int[]{ mScrollView.getScrollX(), mScrollView.getScrollY()});
+    }
+
+    /**
+     * This method is called for orientation changes
+     * This retrieves the state of the Reviews and Trailers RecyclerView in order
+     * when we come back to the activity
+     * Since we overrode onSaveInstanceState and onRestoreInstanceState, we will need to save scrollview position
+     * in the case of orientation change. 
+     *
+     * @param inState The bundle from which to retrieve the state
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle inState) {
+        super.onRestoreInstanceState(inState);
+        mReviewsRecyclerViewState = inState.getParcelable(REVIEWS_STATE);
+        mTrailersRecyclerViewState = inState.getParcelable(TRAILERS_STATE);
+        mScrollPosition = inState.getIntArray(DETAIL_SCROLL_POSITION);
+    }
+
+
 }
